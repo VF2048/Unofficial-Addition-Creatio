@@ -1,0 +1,39 @@
+{
+    "name": "Creatio Addition Unofficial",
+    "version": "0.01",
+    "action": {
+        "default_popup": "terrasoft.ico"
+    },
+    "description": "-",
+    "icons": {
+        "16": "terrasoft.ico",
+        "32": "terrasoft.ico",
+        "48": "terrasoft.ico",
+        "128": "terrasoft.ico"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://creatio.nornik.ru/0/*"
+            ],
+            "run_at": "document_start",
+            "js": [
+                "contentscript.js"
+            ]
+        }
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "injected.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "manifest_version": 3
+}
