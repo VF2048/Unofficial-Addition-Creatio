@@ -1,67 +1,18 @@
-let example = {
-    "className": "Terrasoft.CompareFilter",
-    "filterType": 1,
-    "comparisonType": 11,
-    "isEnabled": true,
-    "trimDateTimeParameterToDate": false,
-    "leftExpression": {
-        "className": "Terrasoft.ColumnExpression",
-        "expressionType": 0,
-        "columnPath": "Number"
-    },
-    "isAggregative": false,
-    "key": "customFilterNumber_Case",
-    "dataValueType": 1,
-    "leftExpressionCaption": "Номер",
-    "rightExpression": {
-        "className": "Terrasoft.ParameterExpression",
-        "expressionType": 2,
-        "parameter": {
-            "className": "Terrasoft.Parameter",
-            "dataValueType": 1,
-            "value": ""
-        }
-    }
-};
 let it = 0;
 let tasks = [];
-
-function addFiler(filters, value, example, it) {
-    let key = (it + 10) + "customFilterNumber_Case";
-    let template = {};
-    template = JSON.parse(JSON.stringify(example));
-    template.key = key;
-    template.rightExpression.parameter.value = value;
-    filters.items[key] = Object.assign({}, template);
-    return filters;
-}
 
 function dataRequest() {
     let find;
     tasks = [];
-    let reg = /RITM\d{9}/gm;
-    let task = prompt("Введите список ритмов", "RITM001465684 RITM001465681");
+    let reg = /((RITM|INC)\d{9})|(TASK\d{8})/gm;
+    let task = prompt("Введите список ритмов или инцидентов, далее нажмите ок и обновите страницу", "Любой текст содержащий номера заданий RITM001465684 RITM001465681");
     while ((find = reg.exec(task)) !== null)
         tasks.push(find[0]);
 }
 
-function keyboardHandler() {
-    let keyState = {};
-    document.addEventListener("keydown", (e) => {
-        keyState[e.code] = true;
-        if (keyState.Backquote && keyState.ControlLeft) {
-            keyState.Backquote = false;
-            keyState.ControlLeft = false;
-            dataRequest();
-        }
-    })
-    document.addEventListener("keyup", (e) => {
-        keyState[e.code] = false;
-    })
-}
-
 (function (xhr) {
-    keyboardHandler();
+    const filterManaget = new FilterManeger();
+    new KeyboardHandler(dataRequest);
 
     const XHR = XMLHttpRequest.prototype
 
@@ -95,8 +46,8 @@ function keyboardHandler() {
                                 value = JSON.parse(value);
                                 for (el of tasks) {
                                     let element = el;
-                                    filter = addFiler(filter, element, example, it);
-                                    value = addFiler(value, element, example, it);
+                                    filter = filterManaget.add(filter, element, it);
+                                    value = filterManaget.add(value, element, it);
                                     it++;
                                 }
                                 it = 0;

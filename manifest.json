@@ -1,20 +1,22 @@
 {
     "name": "Creatio Addition Unofficial",
-    "version": "0.01",
     "action": {
-        "default_popup": "terrasoft.ico"
+        "default_icon": "img/favicon-16x16.png",
+        "default_title": "Click to view a popup",
+        "default_popup": "Popup/popup.html"
     },
-    "description": "-",
     "icons": {
-        "16": "terrasoft.ico",
-        "32": "terrasoft.ico",
-        "48": "terrasoft.ico",
-        "128": "terrasoft.ico"
+        "16": "img/favicon-16x16.png",
+        "32": "img/favicon-32x32.png",
+        "48": "img/favicon-48x48.png"
     },
+    "version": "0.2",
+    "manifest_version": 3,
+    "description": "-",
     "content_scripts": [
         {
             "matches": [
-                "https://creatio.nornik.ru/0/*"
+                "https://creatio.nornik.ru/0/Nui/ViewModule.aspx*"
             ],
             "run_at": "document_start",
             "js": [
@@ -28,12 +30,19 @@
     "web_accessible_resources": [
         {
             "resources": [
-                "injected.js"
+                "/injected/*",
+                "/img/*",
+                "/configs/*"
             ],
             "matches": [
                 "<all_urls>"
             ]
         }
     ],
-    "manifest_version": 3
+    "permissions": [
+        "storage",
+        "activeTab",
+        "scripting",
+        "tabs"
+    ]
 }
