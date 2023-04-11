@@ -1,7 +1,8 @@
 //================ Start config =====================================================================================
 one = "one";
 all = "all";
-
+gray = "gray";
+redLines = "redLines";
 
 //   Required hashtag level start
 const startLevelRitm = 1;
@@ -21,7 +22,11 @@ const sortEnableINC = true;
 
 //  Disabling closing comments
 //      Comments are disabled until there is one of the hashtags: one, until there are all hashtags: all or disabled: false
-const disableComment = all;
+const disableComment = one;
+
+//Appearance of the function to disable comments
+// gray, redLines
+const disableCommentTheme = gray
 
 //    Different levels of hashtags
 // you can add "maxElemINC" or "maxElemRITM" to decrease the minimum count

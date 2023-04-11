@@ -78,7 +78,7 @@ function ifTask() {
                 addButtons();
             }
         }
-    }, 10)
+    }, 100)
 }
 
 function tasktype() {
@@ -90,8 +90,8 @@ function tasktype() {
         Task = Inc;
     if (taskText.match(ritReg))
         Task = Ritm;
-    addStyle();
     checkHashtag();
+    addStyle();
 }
 
 function valideteHashtag(hashtag) {
@@ -143,8 +143,14 @@ function hashSort(hashtag = ``) {
 
 function addStyle() {
     const styleElement = document.createElement(`style`);
+    let color = (() => {
+        if (disableCommentTheme == "redLines")
+            return "background-image: repeating-linear-gradient(-45deg, transparent, transparent 20px,#ff262638 20px,#ff262638 40px);"
+        else if (disableCommentTheme == "gray")
+            return "background-color: #f9f9f9;"
+    })()
     styleElement.innerHTML = `#${Task.closeComment_el}[disabled] {
-        background-image: repeating-linear-gradient(-45deg, transparent, transparent 20px,#ff262638 20px,#ff262638 40px);
+        ${color};
         cursor: not-allowed;
     }`;
     document.head.appendChild(styleElement);

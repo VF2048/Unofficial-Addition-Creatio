@@ -7,7 +7,8 @@ class KeyboardHandler {
         document.addEventListener("keydown", (e) => {
             this.keyState[e.code] = true;
             if (this.keyState.Backquote && this.keyState.ControlLeft) {
-                this.keyState.Backquote, this.keyState.ControlLeft = false;
+                this.keyState.Backquote = false;
+                this.keyState.ControlLeft = false;
                 callback();
             }
         })
