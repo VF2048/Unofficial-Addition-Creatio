@@ -22,7 +22,8 @@ const sortEnableINC = true;
 
 //  Disabling closing comments
 //      Comments are disabled until there is one of the hashtags: one, until there are all hashtags: all or disabled: false
-const disableComment = one;
+const disableCommentRitm = false;
+const disableCommentInc = one;
 
 //Appearance of the function to disable comments
 // gray, redLines

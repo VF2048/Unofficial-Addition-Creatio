@@ -18,6 +18,10 @@ let conf = {
         INC: sortEnableINC,
     },
     hashtags: Hashtags,
+    disableComment:{
+        RITM: disableCommentRitm,
+        INC: disableCommentInc,
+    },
     Answers: {
         RITM: AnswersRitm,
         INC: AnswersINC,
@@ -36,6 +40,7 @@ const Ritm = {
     hashtagsLevelEnd: conf.hashLevel.RITM.end,
     hashtagCont: conf.hashCount.RITM,
     defHashtagCont: conf.hashCount.RITM,
+    disableComment:conf.disableComment.RITM,
 }
 
 const Inc = {
@@ -50,6 +55,7 @@ const Inc = {
     hashtagsLevelEnd: conf.hashLevel.INC.end,
     hashtagCont: conf.hashCount.INC,
     defHashtagCont: conf.hashCount.INC,
+    disableComment:conf.disableComment.INC,
 }
 
 let Task;
@@ -161,7 +167,7 @@ function checkHashtag() {
     const text = commend.closeComment_virtual.value;
     let hashtagIt = text.match(regHash);
     if (hashtagIt == null) {
-        if (disableComment) {
+        if (Task.disableComment) {
             commend.closeComment_el.style.backgroundColor = null;
             commend.closeComment_el.disabled = true;
             return;
@@ -171,7 +177,7 @@ function checkHashtag() {
             commend.closeComment_el.disabled = false;
         }
     }
-    else if (hashtagIt.length < Task.hashtagCont && disableComment == "one") {
+    else if (hashtagIt.length < Task.hashtagCont && Task.disableComment == "one") {
         commend.closeComment_el.style.backgroundColor = "#ff262638";
         commend.closeComment_el.disabled = false;
     }
