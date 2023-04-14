@@ -1,10 +1,4 @@
 
-// (function () {
-//     'use strict';
-
-//     main();
-// })();
-
 function main() {
     const observer = new MutationObserver((mutationsList, observer) => {
         for (let mutation of mutationsList) {

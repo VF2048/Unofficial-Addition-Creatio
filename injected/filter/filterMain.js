@@ -10,9 +10,22 @@ function dataRequest() {
         tasks.push(find[0]);
 }
 
+function checkForClass(className, callback) {
+    var checkExist = setInterval(function () {
+        if (document.querySelector('.' + className)) {
+            clearInterval(checkExist);
+            callback();
+        }
+    }, 100);
+}
+
 (function (xhr) {
-    const filterManaget = new FilterManeger();
-    new KeyboardHandler(dataRequest);
+    checkForClass("FilterManeger", () => {
+        const filterManaget = new FilterManeger();
+    });
+    checkForClass("KeyboardHandler", () => {
+        new KeyboardHandler(dataRequest);
+    })
 
     const XHR = XMLHttpRequest.prototype
 
