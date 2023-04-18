@@ -9,7 +9,12 @@ let Inc = {};
 (function () {
     'use strict';
 
-    checkForVariable(Hashtags, setConfig);
+    var checkExist = setInterval(function () {
+        if (typeof Hashtags !== "undefined") {
+            clearInterval(checkExist);
+            setConfig();
+        }
+    }, 100);
 })();
 
 function setConfig() {
@@ -75,15 +80,6 @@ function setConfig() {
 
     main();
     inputRecheak();
-}
-
-function checkForVariable(variable, callback) {
-    var checkExist = setInterval(function () {
-        if (typeof variable !== "undefined") {
-            clearInterval(checkExist);
-            callback();
-        }
-    }, 100);
 }
 
 function main() {
