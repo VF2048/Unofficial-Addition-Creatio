@@ -79,7 +79,7 @@ function setConfig() {
 
 function checkForVariable(variable, callback) {
     var checkExist = setInterval(function () {
-        if (variable !== undefined) {
+        if (typeof variable !== "undefined") {
             clearInterval(checkExist);
             callback();
         }
