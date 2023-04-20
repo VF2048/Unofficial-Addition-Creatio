@@ -12,20 +12,50 @@ function dataRequest() {
 
 function checkForClass(className, callback) {
     var checkExist = setInterval(function () {
-        if (document.querySelector('.' + className)) {
+        // console.log(typeof className);
+        if (typeof className !== "undefined") {
             clearInterval(checkExist);
             callback();
         }
     }, 100);
 }
 
-(function (xhr) {
-    checkForClass("FilterManeger", () => {
-        const filterManaget = new FilterManeger();
-    });
-    checkForClass("KeyboardHandler", () => {
+function initKeyboardHandler(err) {
+    try {
         new KeyboardHandler(dataRequest);
-    })
+    } catch {
+        if (err > 10) {
+            throw new Error("Not found class KeyboardHandler")
+        }
+        err++
+        setTimeout(() => {
+            initKeyboardHandler();
+        }, 50);
+    }
+}
+
+function initFilterManeger(filterManaget, err) {
+    try {
+        filterManaget = new FilterManeger();
+        return filterManaget
+    } catch {
+        if (err > 10) {
+            throw new Error("Not found class FilterManeger")
+        }
+        err++;
+        setTimeout(() => {
+            initFilterManeger();
+        }, 50);
+    }
+}
+
+(function (xhr) {
+    let errorKeyboardHandler = 0;
+    initKeyboardHandler(errorKeyboardHandler);
+
+    let filterManaget;
+    let errorFilterManeger = 0;
+    filterManaget = initFilterManeger(filterManaget, errorFilterManeger);
 
     const XHR = XMLHttpRequest.prototype
 
