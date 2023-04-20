@@ -24,76 +24,74 @@ cbk2.addEventListener('change', async function () {
     chrome.storage.local.set({ "Scripts": data })
 });
 
-let defKeyConf = {
-    pressed: null,
-    firstKey: null,
-    shortcut: [],
-    shortcutName: [],
-};
+// let defKeyConf = {
+//     pressed: null,
+//     firstKey: null,
+//     shortcut: [],
+//     shortcutName: [],
+// };
 
-let keyConf = copuObject(defKeyConf);
+// let keyConf = copuObject(defKeyConf);
 
-function copuObject(obj) {
-    return JSON.parse(JSON.stringify(obj))
-}
+// function copuObject(obj) {
+//     return JSON.parse(JSON.stringify(obj))
+// }
 
-// chrome.storage.local.set({"key":{}});
-async function getKeyConfig() {
-    let key = keyConf;
-    let result = await chrome.storage.local.get(["key"]);
-    result = result.key;
-    // console.log(result);
-    if (Object.keys(result).length === 0) {
-        console.log("Config key set!");
-        chrome.storage.local.set({ "key": key });
-        return key;
-    }
-    console.log("Config key load!");
-    return result;
-}
+// async function getKeyConfig() {
+//     let key = keyConf;
+//     let result = await chrome.storage.local.get(["key"]);
+//     result = result.key;
+//     if (Object.keys(result).length === 0) {
+//         console.log("Config key set!");
+//         chrome.storage.local.set({ "key": key });
+//         return key;
+//     }
+//     console.log("Config key load!");
+//     return result;
+// }
 
-function saveKeyConfig() {
-    chrome.storage.local.set({ "key": keyConf });
-}
+// function saveKeyConfig() {
+//     chrome.storage.local.set({ "key": keyConf });
+// }
 
-function removeKeyListener() {
-    document.removeEventListener("keydown", getKey);
-    document.removeEventListener("keyup", getKey);
-}
+// function removeKeyListener() {
+//     document.removeEventListener("keydown", getKey);
+//     document.removeEventListener("keyup", getKey);
+// }
 
-function keyUpHandler(e) {
-    if (keyConf.firstKey === e.code) {
-        saveKeyConfig();
-        removeKeyListener();
-    }
-}
+// function keyUpHandler(e) {
+//     if (keyConf.firstKey === e.code) {
+//         saveKeyConfig();
+//         removeKeyListener();
+//     }
+// }
 
-function keyDownHandler(e) {
-    if (keyConf.shortcut.length >= 2) {
-        saveKeyConfig();
-        removeKeyListener();
-        return;
-    }
-    if (keyConf.firstKey == null) {
-        keyConf.firstKey = e.code;
-    }
-    if (keyConf.pressed == e.code)
-        return;
-    keyConf.pressed = e.code;
-    keyConf.shortcut.push(e.code);
-    keyConf.shortcutName.push(e.code);
-    // console.log(e, keySet.pressed, keySet.shortcut);
-    keySet.textContent = keyConf.shortcutName.join("+");
-    saveKeyConfig();
-}
+// function keyDownHandler(e) {
+//     if (keyConf.shortcut.length >= 2) {
+//         saveKeyConfig();
+//         removeKeyListener();
+//         return;
+//     }
+//     if (keyConf.firstKey == null) {
+//         keyConf.firstKey = e.code;
+//     }
+//     if (keyConf.pressed == e.code)
+//         return;
+//     keyConf.pressed = e.code;
+//     keyConf.shortcut.push(e.code);
+//     keyConf.shortcutName.push(e.code);
+//     // console.log(e, keySet.pressed, keySet.shortcut);
+//     keySet.textContent = keyConf.shortcutName.join("+");
+//     saveKeyConfig();
+// }
 
-function getKey(e) {
-    console.log(e);
-    if (e.type == "keydown")
-        keyDownHandler(e);
-    else if (e.type == "keyup")
-        keyUpHandler(e);
-}
+// function getKey(e) {
+//     console.log(e);
+//     if (e.type == "keydown")
+//         keyDownHandler(e);
+//     else if (e.type == "keyup")
+//         keyUpHandler(e);
+// }
 
 async function main() {
     chrome.storage.local.get(["Scripts"]).then((data) => {
@@ -101,15 +99,24 @@ async function main() {
         cbk2.checked = data.Scripts.injected.hashtag.enable;
     })
 
-    keyConf = await getKeyConfig();
+    // keyConf = await getKeyConfig();
 
-    console.log(keyConf);
-    keySet.textContent = keyConf.shortcutName.join("+");
+    // console.log(keyConf);
+    // keySet.textContent = keyConf.shortcutName.join("+");
 
-    keySet.addEventListener("click", () => {
-        keyConf = copuObject(defKeyConf);
-        document.addEventListener("keydown", getKey);
-        document.addEventListener("keyup", getKey);
-    })
+    // keySet.addEventListener("click", () => {
+    //     keyConf = copuObject(defKeyConf);
+    //     document.addEventListener("keydown", getKey);
+    //     document.addEventListener("keyup", getKey);
+    // })
+
+    // chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    //     chrome.scripting.executeScript({
+    //         target: { tabId: tabs[0].id },
+    //         function: () => {
+    //             localStorage.setItem("key","key");
+    //         }
+    //     })
+    // })
 }
 main();

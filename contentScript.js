@@ -4,7 +4,7 @@ let Scripts = {
         "configService",
     ],
     "injected": {
-        "checkFields":{
+        "checkFields": {
             files: [
                 "service",
             ], enable: true
@@ -37,14 +37,26 @@ async function main() {
             for (let conf of folder)
                 addConfig(folderMain, conf)
     }
-
+    // sendToPage("key", getKeyConfig())
 }
 main();
 
-async function getKeyConfig() {
-    let ans = await chrome.storage.local.get(["key"]);
-    return ans
-}
+// function sendToPage(name, data) {
+    // chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    //     console.log(tabs[0].id);
+    //     chrome.scripting.executeScript({
+    //         target: { tabId: tabs[0].id },
+    //         function: () => {
+    //             localStorage.setItem(name, data);
+    //         }
+    //     })
+    // })
+// }
+
+// async function getKeyConfig() {
+//     let ans = await chrome.storage.local.get(["key"]);
+//     return ans
+// }
 
 function addScript(folderMain, folder, name) {
     let s = document.createElement('script');
