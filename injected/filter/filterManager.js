@@ -5,15 +5,15 @@ class FilterManeger {
         "filterType": 1,
         "comparisonType": 11,
         "isEnabled": true,
+        "dataValueType": 1,
+        "isAggregative": false,
         "trimDateTimeParameterToDate": false,
+        "key": "customFilterNumber_Case",
         "leftExpression": {
             "className": "Terrasoft.ColumnExpression",
             "expressionType": 0,
             "columnPath": "Number"
         },
-        "isAggregative": false,
-        "key": "customFilterNumber_Case",
-        "dataValueType": 1,
         "leftExpressionCaption": "Номер",
         "rightExpression": {
             "className": "Terrasoft.ParameterExpression",
@@ -26,11 +26,13 @@ class FilterManeger {
         }
     };
 
-    add(filters, value, it) {
+    add(filters, value, it, type = { columnPath: "Number", leftExpressionCaption: "Номер" }) {
         let key = (it + 10) + "customFilterNumber_Case";
         let template = {};
         template = JSON.parse(JSON.stringify(this.example));
         template.key = key;
+        template.leftExpressionCaption = type.leftExpressionCaption;
+        template.leftExpression.columnPath = type.columnPath;
         template.rightExpression.parameter.value = value;
         filters.items[key] = Object.assign({}, template);
         return filters;

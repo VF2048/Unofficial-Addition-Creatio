@@ -1,13 +1,20 @@
 let it = 0;
 let tasks = [];
+const typeValue = {
+    Number: { columnPath: "Number", leftExpressionCaption: "Номер" },
+    Name: { columnPath: "Name", leftExpressionCaption: "Название" },
+}
 
 function dataRequest() {
     let find;
     tasks = [];
     let reg = /((RITM|INC)\d{9})|(TASK\d{8})/gm;
+    let regCMDB = /(HW\d{6})/gm;
     let task = prompt("Введите список ритмов или инцидентов. Нажмите 'ок', далее 'Применить' и обновите страницу.", "Любой текст содержащий номера заданий RITM001465684 RITM001465681");
     while ((find = reg.exec(task)) !== null)
-        tasks.push(find[0]);
+        tasks.push({ value: find[0], typeValue: "Number" });
+    while ((find = regCMDB.exec(task)) !== null)
+        tasks.push({ value: find[0], typeValue: "Name" });
 }
 
 function checkForClass(className, callback) {
@@ -89,8 +96,8 @@ function initFilterManeger(filterManaget, err) {
                                 value = JSON.parse(value);
                                 for (el of tasks) {
                                     let element = el;
-                                    filter = filterManaget.add(filter, element, it);
-                                    value = filterManaget.add(value, element, it);
+                                    filter = filterManaget.add(filter, element.value, it, typeValue[element.typeValue]);
+                                    value = filterManaget.add(value, element.value, it, typeValue[element.typeValue]);
                                     it++;
                                 }
                                 it = 0;
