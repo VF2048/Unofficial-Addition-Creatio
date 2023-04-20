@@ -1,24 +1,20 @@
 
-function main() {
-    const observer = new MutationObserver((mutationsList, observer) => {
-        for (let mutation of mutationsList) {
-            ifTask();
+(function main() {
+    const observer1 = new MutationObserver(() => {
+        const elem = document.querySelectorAll(`[id*="ServiceOfferingLookupEdit-link-el"]`);
+        if (elem.length > 0) {
+            elem.forEach((elem, key) => {
+                checkValue(elem);
+            })
         }
     })
     const config = { attributes: true, childList: true, subtree: true };
-    observer.observe(document, config);
-    ifTask();
-}
+    observer1.observe(document, config);
+})()
 
-function ifTask() {
-    const elem = document.querySelectorAll(`[id*="ServiceOfferingLookupEdit-link-el"]`);
-    if (elem.length > 0) {
-        elem.forEach((value, key) => {
-            if (value.innerText != mainServiceName) {
-                value.style.backgroundColor = "#ff262638";
-            } else if (value.innerText == mainServiceName)
-                value.style.backgroundColor = null;
-            })
-        clearInterval(loadWait);
-    }
+function checkValue(elem) {
+    if (elem.innerText != mainServiceName) {
+        elem.style.backgroundColor = "#ff262638";
+    } else if (elem.innerText == mainServiceName)
+        elem.style.backgroundColor = null;
 }
