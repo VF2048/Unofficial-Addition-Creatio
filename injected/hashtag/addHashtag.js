@@ -51,9 +51,9 @@ function setConfig() {
     Ritm = {
         type: "Ritm",
         max: "maxElemRITM",
-        closeComment_el: "ActivityPageV2DetailedResultMemoEdit-el",
-        closeComment_virtual: "ActivityPageV2DetailedResultMemoEdit-virtual",
-        buttonslayout: "ActivityPageV2InformationClosedAndPausedGridLayoutGridLayout-item-ActivityPageV2DetailedResultContainer",
+        closeComment_el: "NNCaseTaskPageDetailedResultMemoEdit-el",
+        closeComment_virtual: "NNCaseTaskPageDetailedResultMemoEdit-virtual",
+        buttonslayout: "NNCaseTaskPageInformationClosedAndPausedGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultContainer",
         answer: conf.Answers.RITM,
         sort: conf.sort.RITM,
         hashtagsLevelStart: conf.hashLevel.RITM.start,
@@ -66,9 +66,9 @@ function setConfig() {
     Inc = {
         type: "Inc",
         max: "maxElemINC",
-        closeComment_el: "ActivityPageV2DetailedResultIncidentMemoEdit-el",
-        closeComment_virtual: "ActivityPageV2DetailedResultIncidentMemoEdit-virtual",
-        buttonslayout: "ActivityPageV2InformationClosedAndPausedIncidentGridLayoutGridLayout-item-ActivityPageV2DetailedResultIncidentContainer",
+        closeComment_el: "NNCaseTaskPageDetailedResultIncidentMemoEdit-el",
+        closeComment_virtual: "NNCaseTaskPageDetailedResultIncidentMemoEdit-virtual",
+        buttonslayout: "NNCaseTaskPageInformationClosedAndPausedIncidentGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultIncidentContainer",
         answer: conf.Answers.INC,
         sort: conf.sort.INC,
         hashtagsLevelStart: conf.hashLevel.INC.start,
@@ -101,7 +101,7 @@ function ifTask() {
 }
 
 function tasktype() {
-    const task = document.getElementById("ActivityPageV2CaseLookupEdit-link-el");
+    const task = document.getElementById("NNCaseTaskPageCaseLookupEdit-link-el");
     const taskText = task.textContent
     const incReg = /(INC)\d*/gm;
     const ritReg = /(RITM)\d*/gm;
