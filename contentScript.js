@@ -80,7 +80,7 @@ function addConfig(folderMain, name) {
 
 async function getConf() {
     let result = await chrome.storage.local.get(["Scripts"])
-    if (Object.keys(result).length == 0) {
+    if (!result || Object.keys(result).length == 0) {
         console.log("Config set!");
         chrome.storage.local.set({ "Scripts": Scripts });
         return Scripts;

@@ -8,13 +8,19 @@
             })
         }
     })
-    const config = { attributes: true, childList: true, subtree: true };
+    const config = { attributes: false, childList: true, subtree: true };
     observer1.observe(document, config);
 })()
 
 function checkValue(elem) {
-    if (elem.innerText != mainServiceName) {
+    let found = false
+    for (const el of mainServices) {
+        if (elem.innerText == el.text) {
+            found = true
+            elem.style.backgroundColor = (el.color != null ? el.color : null);
+        }
+    }
+    if (!found) {
         elem.style.backgroundColor = "#ff262638";
-    } else if (elem.innerText == mainServiceName)
-        elem.style.backgroundColor = null;
+    }
 }
