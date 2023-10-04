@@ -3,8 +3,8 @@ let commend;
 const regHash = /(#\S+)\s+?/gm;
 
 let conf = {};
-let Ritm = {};
-let Inc = {};
+let pageHandler;
+let treeHandler;
 
 (function () {
     'use strict';
@@ -46,38 +46,14 @@ function setConfig() {
             RITM: AnswersRitm,
             INC: AnswersINC,
         },
+        color: {
+            RITM: colorRITM,
+            INC: colorINC,
+        }
     };
 
-    Ritm = {
-        type: "Ritm",
-        max: "maxElemRITM",
-        closeComment_el: "NNCaseTaskPageDetailedResultMemoEdit-el",
-        closeComment_virtual: "NNCaseTaskPageDetailedResultMemoEdit-virtual",
-        buttonslayout: "NNCaseTaskPageInformationClosedAndPausedGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultContainer",
-        answer: conf.Answers.RITM,
-        sort: conf.sort.RITM,
-        hashtagsLevelStart: conf.hashLevel.RITM.start,
-        hashtagsLevelEnd: conf.hashLevel.RITM.end,
-        hashtagCont: conf.hashCount.RITM,
-        defHashtagCont: conf.hashCount.RITM,
-        disableComment: conf.disableComment.RITM,
-    }
-
-    Inc = {
-        type: "Inc",
-        max: "maxElemINC",
-        closeComment_el: "NNCaseTaskPageDetailedResultIncidentMemoEdit-el",
-        closeComment_virtual: "NNCaseTaskPageDetailedResultIncidentMemoEdit-virtual",
-        buttonslayout: "NNCaseTaskPageInformationClosedAndPausedIncidentGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultIncidentContainer",
-        answer: conf.Answers.INC,
-        sort: conf.sort.INC,
-        hashtagsLevelStart: conf.hashLevel.INC.start,
-        hashtagsLevelEnd: conf.hashLevel.INC.end,
-        hashtagCont: conf.hashCount.INC,
-        defHashtagCont: conf.hashCount.INC,
-        disableComment: conf.disableComment.INC,
-    }
-
+    pageHandler = new PageHandler();
+    treeHandler = new HashtagTreeHandler(hashtagTree, addHashtagToEnd);
     main();
     inputRecheak();
 }
@@ -88,29 +64,127 @@ function main() {
 
 function ifTask() {
     const ifReady = setInterval(function () {
-        const elem = document.getElementById("MainHeaderSchemaPageHeaderCaptionLabel");
-        if (elem != null) {
-            const regex = /(TASK)\d*/gm;
-            if (elem.textContent.match(regex)) {
-                clearInterval(ifReady);
-                tasktype();
-                addButtons();
-            }
+        if (pageHandler.ifTask()) {
+            clearInterval(ifReady);
+            tasktype();
+            addButtons();
         }
     }, 100)
 }
 
 function tasktype() {
-    const task = document.getElementById("NNCaseTaskPageCaseLookupEdit-link-el");
-    const taskText = task.textContent
-    const incReg = /(INC)\d*/gm;
-    const ritReg = /(RITM)\d*/gm;
-    if (taskText.match(incReg))
-        Task = Inc;
-    if (taskText.match(ritReg))
-        Task = Ritm;
+    Task = pageHandler.getRequestType();
+    findService();
+    // setcolor(Task.color);
     checkHashtag();
     addStyle();
+}
+
+function checkHashtag() {
+    commend = pageHandler.getCommentField();
+    closeText = pageHandler.getCloseFieldText();
+    if (Task.service) {
+        const redex = new RegExp(treeHandler.getRegex(), "gm");
+        let hashtagTree = redex.exec(closeText)
+        if (hashtagTree === null)
+            pageHandler.addOverlay();
+        else
+            pageHandler.removeOverlay();
+    }
+    let hashtagIt = closeText.match(regHash);
+    if (hashtagIt == null) {
+        if (Task.disableComment) {
+            pageHandler.setCloseCommentStyle(null, true);
+            return;
+        }
+        else {
+            pageHandler.setCloseCommentStyle(null, false);
+        }
+    }
+    else if (hashtagIt.length < Task.hashtagCont && Task.disableComment == "one") {
+        pageHandler.setCloseCommentStyle("#ff262638", false);
+    }
+    else if (hashtagIt.length >= Task.hashtagCont) {
+        pageHandler.setCloseCommentStyle(null, false);
+    }
+}
+
+function findService() {
+    const elem = pageHandler.getAllServiceFields();
+    Task.service = undefined;
+    for (let key in serviceList)
+        if (elem.text == serviceList[key])
+            Task.service = key;
+}
+
+function generateButtHash() {
+    let buttons = ``;
+    if (Task.hashtagsLevelStart)
+        for (let i = Task.hashtagsLevelStart - 1; i < Task.hashtagsLevelEnd; i++) {
+            let batton = ``;
+            for (let el of conf.hashtags[i]) {
+                batton += pageHandler.genButton("Hashtag", el);
+            }
+            buttons += pageHandler.genRow(batton);
+        }
+    return `
+        <div  id="el1">
+            ${buttons}
+            ${Task.sort ? pageHandler.genRow(`<button class="Sort">Отсортировать #</button>`) : ``}
+            ${generateButtAns()}
+        </div>`;
+}
+
+function addButtons() {
+    if (pageHandler.getHashButtons() != null)
+        return;
+    const closeLayout = pageHandler.getButtonslayout();
+    const parent = closeLayout.parentElement;
+    parent.insertAdjacentHTML("beforebegin", generateButtHash());
+    if (Task.type === "Inc" && Task.service)
+        parent.insertAdjacentHTML("afterend", pageHandler.generateButtType());
+    buttonHandler();
+}
+
+function buttonHandler() {
+    pageHandler.getElementById("el1").onclick = function (e) {
+        if (e.target.tagName == "BUTTON") {
+            switch (e.target.className) {
+                case "Hashtag":
+                    addHashtag(e.target.textContent + " ");
+                    break;
+                case "Sort":
+                    hashSort();
+                    break;
+                case "Answer":
+                    setText(e.target.title);
+                    break;
+            }
+        }
+    };
+    if (Task.service)
+        pageHandler.getElementById("el2").onclick = (e) => {
+            if (e.target.tagName == "BUTTON") {
+                if (e.target.className == "type-define") {
+                    treeHandler.generateThree(Task);
+                }
+            }
+        };
+}
+
+function inputRecheak() {
+    const inputCheak = setInterval(function () {
+        const body = pageHandler.getBody();
+        if (body.length > 0) {
+            clearInterval(inputCheak);
+            body[0].addEventListener("mousedown", () => {
+                main();
+            })
+            body[0].addEventListener("keydown", () => {
+                main();
+            })
+        }
+    })
 }
 
 function valideteHashtag(hashtag) {
@@ -135,7 +209,12 @@ function checkMaxHashtags(max) {
 }
 
 function hashSort(hashtag = ``) {
-    let text = commend.closeComment_virtual.value;
+    let text = pageHandler.getCloseFieldText();
+    const redex = new RegExp(treeHandler.getRegex(), "gm");
+    let hashtagTree = redex.exec(text);
+    if (hashtagTree === null)
+        hashtagTree = "";
+    text = text.replace(redex, ``);
     let hashtagIt = text.match(regHash);
     if (hashtagIt)
         hashtagIt.push(hashtag);
@@ -155,13 +234,13 @@ function hashSort(hashtag = ``) {
     let com = ``;
     for (const el of hashArray)
         com += el;
-    com += text;
+    com += text + hashtagTree;
     setText(com);
     checkHashtag();
 }
 
 function addStyle() {
-    const styleElement = document.createElement(`style`);
+    const styleElement = pageHandler.createStyle("closeStyle");
     let color = (() => {
         if (disableCommentTheme == "redLines")
             return "background-image: repeating-linear-gradient(-45deg, transparent, transparent 20px,#ff262638 20px,#ff262638 40px);"
@@ -175,125 +254,44 @@ function addStyle() {
     document.head.appendChild(styleElement);
 }
 
-function checkHashtag() {
-    commend = getCommentField();
-    const text = commend.closeComment_virtual.value;
-    let hashtagIt = text.match(regHash);
-    if (hashtagIt == null) {
-        if (Task.disableComment) {
-            commend.closeComment_el.style.backgroundColor = null;
-            commend.closeComment_el.disabled = true;
-            return;
-        }
-        else {
-            commend.closeComment_el.style.backgroundColor = "#ff262638";
-            commend.closeComment_el.disabled = false;
-        }
-    }
-    else if (hashtagIt.length < Task.hashtagCont && Task.disableComment == "one") {
-        commend.closeComment_el.style.backgroundColor = "#ff262638";
-        commend.closeComment_el.disabled = false;
-    }
-    else if (hashtagIt.length >= Task.hashtagCont) {
-        commend.closeComment_el.style.backgroundColor = null;
-        commend.closeComment_el.disabled = false;
-    }
-}
-
-function genButton(type, el) {
-    return `<button class="${type}" title="${el.title}">${el.name}</button>`
-}
-
-function genRow(el) {
-    if (el != ``)
-        return `<div class="grid-layout-row ts-box-sizing hashButtons" id="hashButtons">
-            <div class="ts-box-sizing base-edit-with-right-icon base-edit-disabled date-edit datetime-datecontrol">
-                ${el}
-            </div>
-        </div>`
-}
-
-function generateButtHash() {
-    let buttons = ``;
-    for (let i = Task.hashtagsLevelStart - 1; i < Task.hashtagsLevelEnd; i++) {
-        let batton = ``;
-        for (let el of conf.hashtags[i]) {
-            batton += genButton("Hashtag", el);
-        }
-        buttons += genRow(batton);
-    }
-    return `
-        <div  id="el1">
-            ${buttons}
-            ${Task.sort ? genRow(`<button class="Sort">Отсортировать #</button>`) : ``}
-            ${generateButtAns()}
-        </div>`;
-}
-
-function generateButtAns() {
-    let buttons = ``;
-    for (const el of Task.answer) {
-        buttons += genButton("Answer", el);
-    }
-    return genRow(buttons);
-}
-
-function addButtons() {
-    if (document.getElementById("hashButtons") != null)
-        return;
-    const closeLayout = document.getElementById(Task.buttonslayout);
-    const parent = closeLayout.parentElement;
-    parent.insertAdjacentHTML("beforebegin", generateButtHash());
-    buttonHandler();
-}
-
-function buttonHandler() {
-    document.getElementById("el1").onclick = (e) => {
-        if (e.target.tagName == "BUTTON") {
-            if (e.target.className == "Hashtag")
-                addHashtag(e.target.textContent + " ");
-            if (e.target.className == "Sort")
-                hashSort();
-            if (e.target.className == "Answer")
-                setText(e.target.title);
-        }
-    };
-}
-
 function addHashtag(hashtag) {
     hashSort(hashtag);
     generateEvent();
     tasktype();
 }
 
-function setText(text) {
-    commend.closeComment_virtual.value = text;
-    commend.closeComment_el.value = text;
+function addHashtagToEnd(text) {
+    redex = new RegExp(treeHandler.getRegex(), "gm");
+    let closeText = pageHandler.getCloseFieldText();
+    if (redex.exec(closeText) !== null)
+        closeText = closeText.replace(redex, text);
+    else
+        closeText += text;
+    if (redex.exec(closeText) !== null)
+        closeText = closeText.replace(redex, text);
+    else
+        closeText += text;
+    pageHandler.setCloseCommentText(closeText);
     generateEvent();
     tasktype();
 }
 
-function getCommentField() {
-    const closeComment_el = document.getElementById(Task.closeComment_el);
-    const closeComment_virtual = document.getElementById(Task.closeComment_virtual);
-    return { closeComment_el, closeComment_virtual };
+function setText(text) {
+    pageHandler.setCloseCommentText(text)
+    generateEvent();
+    tasktype();
 }
 
 function generateEvent() {
-    document.getElementById(Task.closeComment_el).focus();
+    pageHandler.getElementById(Task.closeComment_el).focus();
 }
 
-function inputRecheak() {
-    const inputCheak = setInterval(function () {
-        const body = document.getElementsByTagName("body");
-        if (body.length > 0) {
-            clearInterval(inputCheak);
-            body[0].addEventListener("mousedown", () => {
-                main();
-            })
-            body[0].addEventListener("keydown", () => {
-                main();
-            })
-        }
-    })
+function generateButtAns() {
+    let buttons = ``;
+    if (!Task.answer.length)
+        return "";
+    for (const el of Task.answer) {
+        buttons += pageHandler.genButton("Answer", el);
+    }
+    return pageHandler.genRow(buttons);
 }

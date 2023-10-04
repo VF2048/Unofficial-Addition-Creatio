@@ -1,86 +1,108 @@
 let Scripts = {
-    "configs": [
-        "configHashtag",
-        "configService",
-    ],
-    "injected": {
-        "checkFields": {
+    version: 4,
+    injected: {
+        checkFields: {
+            type: "js",
             files: [
-                "service",
-            ], enable: true
+                "service"
+            ]
         },
-        "filter": {
+        coloring: {
+            type: "js",
+            files: [
+                "setcolor"
+            ]
+        },
+        configs: {
+            type: "js",
+            files: [
+                "configHashtag",
+                "configService",
+                "hashtagTree"
+            ]
+        },
+        filter: {
+            type: "js",
             files: [
                 "filterManager",
                 "keyboardHandler",
-                "filterMain",
-            ], enable: true
+                "filterMain"
+            ]
         },
-        "hashtag": {
+        hashtag: {
+            type: "js",
             files: [
                 "addHashtag",
-            ], enable: true
-        }
+                "hashtagTree",
+                "pageHandler"
+            ]
+        },
+        style: {
+            type: "css",
+            files: [
+                "main"
+            ]
+        },
     }
 }
 
+async function checkhashtagTreeVersion() {
+    const hashtagTreeURL = chrome.runtime.getURL("injected/configs/hashtagTree.js");
+    let version = await fetch(hashtagTreeURL)
+        .then(responce => responce.text())
+        .then(text => {
+            const regex = /const hashtagVersion = "([^"]+)"/;
+            const matchs = text.match(regex);
+            if (matchs && matchs.length >= 2)
+                return matchs[1];
+        })
+        .catch(error => console.error(error));
+
+    let netVersion = await chrome.runtime.sendMessage({ action: "fetchData", url: "file://softcloud//Library//SoftArm//hashtagTree//hashtagTree.js" });
+    if(!netVersion){
+        alert("Не удалось найти hashtagTree.js на softcloud!");
+        return;
+    }
+    if (version !== netVersion){
+        chrome.runtime.sendMessage({ action: "download", url: "file://softcloud//Library//SoftArm//hashtagTree//hashtagTree.js" });
+        alert("Файл hashtagTree.js устарел и требует замены.\nСкачайте данный файл и поместите его в папку расширения\ninjected/configs/hashtagTree.js");
+    }
+}
 
 async function main() {
+    await checkhashtagTreeVersion();
     let conf = await getConf();
     for (const [folderMain, folder] of Object.entries(conf)) {
-        if (!Array.isArray(folder)) {
-            for (const [foldername, scripts] of Object.entries(folder))
-                if (scripts.enable)
-                    for (let sc of scripts.files)
-                        addScript(folderMain, foldername, sc);
-        } else
-            for (let conf of folder)
-                addConfig(folderMain, conf)
+        for (const [folderName, elem] of Object.entries(folder))
+            if (elem.files)
+                genInjectForFile(`${folderMain}/${folderName}`, elem, "/");
     }
-    // sendToPage("key", getKeyConfig())
 }
 main();
 
-// function sendToPage(name, data) {
-    // chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    //     console.log(tabs[0].id);
-    //     chrome.scripting.executeScript({
-    //         target: { tabId: tabs[0].id },
-    //         function: () => {
-    //             localStorage.setItem(name, data);
-    //         }
-    //     })
-    // })
-// }
-
-// async function getKeyConfig() {
-//     let ans = await chrome.storage.local.get(["key"]);
-//     return ans
-// }
-
-function addScript(folderMain, folder, name) {
-    let s = document.createElement('script');
-    s.src = chrome.runtime.getURL(`${folderMain}/${folder}/${name}.js`);
-    s.onload = function () {
-        this.remove();
-    };
-    (document.head || document.documentElement || document.body).appendChild(s);
-    console.log("Loaded: ", folder, "->", name);
-}
-
-function addConfig(folderMain, name) {
-    let s = document.createElement('script');
-    s.src = chrome.runtime.getURL(`${folderMain}/${name}.js`);
-    s.onload = function () {
-        this.remove();
-    };
-    (document.head || document.documentElement || document.body).appendChild(s);
-    console.log("Loaded: ", folderMain, "->", name);
+function genInjectForFile(path, files, separator) {
+    for (const iterator of files.files) {
+        let s = document.createElement(files.type === "js" ? "script" : "link");
+        let src;
+        src = chrome.runtime.getURL(`${path}${separator}${iterator}.${files.type}`);
+        if (files.type === "css") {
+            s.href = src;
+            s.type = "text/css";
+            s.rel = "stylesheet";
+        } else {
+            s.src = src;
+            s.onload = function () {
+                this.remove();
+            };
+        }
+        (document.head || document.documentElement || document.body).appendChild(s);
+        console.log(`Loaded: ${path} -> ${iterator}`);
+    }
 }
 
 async function getConf() {
     let result = await chrome.storage.local.get(["Scripts"])
-    if (!result || Object.keys(result).length == 0) {
+    if (!result || Object.keys(result).length === 0 || result.Scripts.version != Scripts.version) {
         console.log("Config set!");
         chrome.storage.local.set({ "Scripts": Scripts });
         return Scripts;
