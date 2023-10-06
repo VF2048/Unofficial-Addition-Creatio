@@ -54,12 +54,8 @@ function setConfig() {
 
     pageHandler = new PageHandler();
     treeHandler = new HashtagTreeHandler(hashtagTree, addHashtagToEnd);
-    main();
-    inputRecheak();
-}
-
-function main() {
     ifTask();
+    inputRecheak();
 }
 
 function ifTask() {
@@ -136,13 +132,19 @@ function generateButtHash() {
 }
 
 function addButtons() {
-    if (pageHandler.getHashButtons() != null)
-        return;
     const closeLayout = pageHandler.getButtonslayout();
     const parent = closeLayout.parentElement;
-    parent.insertAdjacentHTML("beforebegin", generateButtHash());
-    if (Task.type === "Inc" && Task.service)
-        parent.insertAdjacentHTML("afterend", pageHandler.generateButtType());
+    if (!pageHandler.getElementById("el1"))
+        parent.insertAdjacentHTML("beforebegin", generateButtHash());
+    let type = pageHandler.getButtType();
+    if (!type) {
+        if (Task.type === "Inc" && Task.service) {
+            parent.insertAdjacentHTML("afterend", pageHandler.generateButtType());
+        }
+    }
+    else if (!Task.service) {
+        type.remove();
+    }
     buttonHandler();
 }
 
@@ -157,7 +159,7 @@ function buttonHandler() {
                     hashSort();
                     break;
                 case "Answer":
-                    setText(e.target.title);
+                    generateAnswer(e.target.title);
                     break;
             }
         }
@@ -178,10 +180,10 @@ function inputRecheak() {
         if (body.length > 0) {
             clearInterval(inputCheak);
             body[0].addEventListener("mousedown", () => {
-                main();
+                ifTask();
             })
             body[0].addEventListener("keydown", () => {
-                main();
+                ifTask();
             })
         }
     })
@@ -267,13 +269,7 @@ function addHashtagToEnd(text) {
         closeText = closeText.replace(redex, text);
     else
         closeText += text;
-    if (redex.exec(closeText) !== null)
-        closeText = closeText.replace(redex, text);
-    else
-        closeText += text;
-    pageHandler.setCloseCommentText(closeText);
-    generateEvent();
-    tasktype();
+    setText(closeText);
 }
 
 function setText(text) {
@@ -294,4 +290,13 @@ function generateButtAns() {
         buttons += pageHandler.genButton("Answer", el);
     }
     return pageHandler.genRow(buttons);
+}
+
+function generateAnswer(answerText) {
+    const regex = new RegExp(treeHandler.getRegex(), "gm");
+    let text = pageHandler.getCloseFieldText();
+    let hashTree = regex.exec(text);
+    hashTree = hashTree[0].trim();
+    text = text.replace(regex, ``);
+    setText(text + " " + answerText + " " + hashTree);
 }

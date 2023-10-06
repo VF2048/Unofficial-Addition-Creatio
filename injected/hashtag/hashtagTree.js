@@ -170,6 +170,7 @@ class HashtagTreeHandler {
     }
 
     disableDisplay() {
+        this.selectorDisable = false;
         this.tableBody.removeEventListener("mouseover", this.mouseOver, this);
         const lines = this.tableBody.querySelectorAll("td");
         lines.forEach(element => {
@@ -234,7 +235,7 @@ class HashtagTreeHandler {
     }
 
     getRegex() {
-        return `\\s${hashtagVersion}.+?${hashtagVersion}`;
+        return `\\s+?${hashtagVersion}.+?${hashtagVersion}`;
     }
 
     buttonHandler() {

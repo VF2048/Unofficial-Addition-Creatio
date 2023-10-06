@@ -137,6 +137,10 @@ class PageHandler {
         return this.getElementById(this.Task.buttonslayout);
     }
 
+    getButtType(){
+        return this.getElementById("el2")
+    }
+
     setCloseCommentStyle(color, disable) {
         this.Page.closeComment_el.style.backgroundColor = color;
         this.Page.closeComment_el.disabled = disable;
