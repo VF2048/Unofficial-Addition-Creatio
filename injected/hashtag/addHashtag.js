@@ -149,23 +149,28 @@ function addButtons() {
 }
 
 function buttonHandler() {
-    pageHandler.getElementById("el1").onclick = function (e) {
-        if (e.target.tagName == "BUTTON") {
-            switch (e.target.className) {
-                case "Hashtag":
-                    addHashtag(e.target.textContent + " ");
-                    break;
-                case "Sort":
-                    hashSort();
-                    break;
-                case "Answer":
-                    generateAnswer(e.target.title);
-                    break;
+    let el1 = pageHandler.getElementById("el1");
+    if (el1)
+        el1.onclick = function (e) {
+            if (e.target.tagName == "BUTTON") {
+                switch (e.target.className) {
+                    case "Hashtag":
+                        addHashtag(e.target.textContent + " ");
+                        break;
+                    case "Sort":
+                        hashSort();
+                        break;
+                    case "Answer":
+                        generateAnswer(e.target.title);
+                        break;
+                }
             }
-        }
-    };
-    if (Task.service)
-        pageHandler.getElementById("el2").onclick = (e) => {
+        };
+    if (!Task.service)
+        return;
+    let el2 = pageHandler.getElementById("el2");
+    if (el2)
+        el2.onclick = (e) => {
             if (e.target.tagName == "BUTTON") {
                 if (e.target.className == "type-define") {
                     treeHandler.generateThree(Task);
@@ -270,6 +275,7 @@ function addHashtagToEnd(text) {
     else
         closeText += text;
     setText(closeText);
+    hashSort();
 }
 
 function setText(text) {
@@ -296,7 +302,11 @@ function generateAnswer(answerText) {
     const regex = new RegExp(treeHandler.getRegex(), "gm");
     let text = pageHandler.getCloseFieldText();
     let hashTree = regex.exec(text);
-    hashTree = hashTree[0].trim();
-    text = text.replace(regex, ``);
+    if (hashTree !== null) {
+        hashTree = hashTree[0].trim();
+        text = text.replace(regex, ``);
+    }
+    else
+        hashTree = "";
     setText(text + " " + answerText + " " + hashTree);
 }

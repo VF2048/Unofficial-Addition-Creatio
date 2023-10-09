@@ -2,7 +2,7 @@ class PageHandler {
 
     Task;
 
-    Ritm = {
+    #Ritm = {
         type: "Ritm",
         max: "maxElemRITM",
         closeComment_el: "NNCaseTaskPageDetailedResultMemoEdit-el",
@@ -19,7 +19,7 @@ class PageHandler {
         color: conf.color.RITM,
     }
 
-    Inc = {
+    #Inc = {
         type: "Inc",
         max: "maxElemINC",
         closeComment_el: "NNCaseTaskPageDetailedResultIncidentMemoEdit-el",
@@ -54,9 +54,9 @@ class PageHandler {
         const incReg = /(INC)\d*/gm;
         const ritReg = /(RITM)\d*/gm;
         if (taskText.match(incReg))
-            return this.setTask(this.Inc);
+            return this.setTask(this.#Inc);
         if (taskText.match(ritReg))
-            return this.setTask(this.Ritm);
+            return this.setTask(this.#Ritm);
     }
 
     setTask(type) {
