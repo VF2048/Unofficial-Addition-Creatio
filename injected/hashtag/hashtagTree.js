@@ -103,10 +103,8 @@ class HashtagTreeHandler {
                 </table>
                 <div class="incident_request">
                         <label for="incident">Это массовый инцидент?</label>
-                        <input class="radio" type="radio" id="radio-yes" name="incident" value="yes">
+                        <input class="radio" type="checkbox" id="checkbox-yes" name="incident" value="yes">
                         <label for="radio-yes">Да</label>
-                        <input class="radio" type="radio" id="radio-no" name="incident" value="no">
-                        <label for="radio-no">Нет</label>
                     <div id="incident_input" class="incident_number" style="display: none;">
                         <label for="incident_number" style="padding-left: 10px;">А есть номер?</label>
                         <input type="text" id="incident_number" name="incident_number">
@@ -207,29 +205,23 @@ class HashtagTreeHandler {
             }
         }
         const incident_input = document.getElementById("incident_input");
-        if (elem.target.id === "radio-yes") {
-            incident_input.style.display = "contents";
-        }
-        if (elem.target.id === "radio-no") {
-            incident_input.style.display = "none";
+        if (elem.target.id === "checkbox-yes") {
+            let checked = elem.target.checked;
+            incident_input.style.display = checked ? "contents" : "none";
         }
         const saveButton = document.getElementById("save");
         if (this.returnStrings.hashtag.string !== "") {
-            const incident = document.getElementsByName("incident");
-            for (let elemRario of incident)
-                if (elemRario.type === "radio")
-                    if (elemRario.checked)
-                        saveButton.disabled = false;
+            saveButton.disabled = false;
         } else
             if (saveButton)
                 saveButton.disabled = true;
         if (elem.target.id === "save")
             if (!elem.target.disabled) {
                 let incNumber = "";
-                const isMassIncident = document.getElementById("radio-yes").checked;
+                const isMassIncident = document.getElementById("checkbox-yes").checked;
                 if (isMassIncident)
                     incNumber = document.getElementById("incident_number").value;
-                this.addHashtagToEnd(` ${hashtagVersion}${this.returnStrings.hashtag.string} ${isMassIncident ? "#MassIncident:" + incNumber : "#NotMassIncident"} ${hashtagVersion}`)
+                this.addHashtagToEnd(` ${hashtagVersion}${this.returnStrings.hashtag.string}${isMassIncident ? " #MassIncident:" + incNumber : ""} ${hashtagVersion}`)
                 this.disableDisplay();
             }
     }
