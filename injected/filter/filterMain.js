@@ -8,7 +8,7 @@ const typeValue = {
 function dataRequest() {
     let find;
     tasks = [];
-    let reg = /((RITM|INC)\d{9})|(TASK\d{8})/gm;
+    let reg = /((RITM|INC)\d{9})|((TASK|CHG)\d{8})/gm;
     let regCMDB = /(HW\d{6})|(HW\d{5})/gm;
     let task = prompt("Введите список ритмов или инцидентов. Нажмите 'ок', далее 'Применить' и обновите страницу.", "Любой текст содержащий номера заданий RITM001465684 RITM001465681");
     while ((find = reg.exec(task)) !== null)

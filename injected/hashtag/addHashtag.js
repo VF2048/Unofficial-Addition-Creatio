@@ -87,6 +87,8 @@ function checkHashtag() {
         else
             pageHandler.removeOverlay();
     }
+    else
+        pageHandler.removeOverlay();
     let hashtagIt = closeText.match(regHash);
     if (hashtagIt == null) {
         if (Task.disableComment) {
