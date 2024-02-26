@@ -7,6 +7,8 @@ class PageHandler {
         max: "maxElemRITM",
         closeComment_el: "NNCaseTaskPageDetailedResultMemoEdit-el",
         closeComment_virtual: "NNCaseTaskPageDetailedResultMemoEdit-virtual",
+        TechInfo_el: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-el",
+        TechInfo_virtual: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-virtual",
         closeCode: "NNCaseTaskPageIteClosureCodeComboBoxEdit-el",
         buttonslayout: "NNCaseTaskPageInformationClosedAndPausedGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultContainer",
         answer: conf.Answers.RITM,
@@ -24,6 +26,8 @@ class PageHandler {
         max: "maxElemINC",
         closeComment_el: "NNCaseTaskPageDetailedResultIncidentMemoEdit-el",
         closeComment_virtual: "NNCaseTaskPageDetailedResultIncidentMemoEdit-virtual",
+        TechInfo_el: "NNCaseTaskPageIteSecondHandMaterialsIncidentMemoEdit-el",
+        TechInfo_virtual: "NNCaseTaskPageIteSecondHandMaterialsIncidentMemoEdit-virtual",
         closeCode: "NNCaseTaskPageIteClosureCodeIncidentContainer_Control",
         buttonslayout: "NNCaseTaskPageInformationClosedAndPausedIncidentGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultIncidentContainer",
         answer: conf.Answers.INC,
@@ -76,13 +80,17 @@ class PageHandler {
     }
 
     getCommentField() {
+        const TechInfo_el = this.getElementById(Task.TechInfo_el);
+        const TechInfo_virtual = this.getElementById(Task.TechInfo_virtual);
         const closeComment_el = this.getElementById(Task.closeComment_el);
         const closeComment_virtual = this.getElementById(Task.closeComment_virtual);
         const closeCode = this.getElementById(Task.closeCode);
+        this.Page.TechInfo_el = TechInfo_el;
+        this.Page.TechInfo_virtual = TechInfo_virtual;
         this.Page.closeComment_el = closeComment_el;
         this.Page.closeComment_virtual = closeComment_virtual;
         this.Page.closeCode = closeCode;
-        return { closeComment_el, closeComment_virtual, closeCode };
+        return { TechInfo_el, TechInfo_virtual, closeCode };
     }
 
     getOverlay() {
@@ -125,19 +133,23 @@ class PageHandler {
         return document.getElementById(id);
     }
 
+    getTechInfoFieldText() {
+        return this.Page.TechInfo_virtual.value;
+    }
+
     getCloseFieldText() {
         return this.Page.closeComment_virtual.value;
     }
 
     getCloseFieldTextEl() {
-        return this.Page.closeComment_el.value;
+        return this.Page.TechInfo_el.value;
     }
 
     getButtonslayout() {
         return this.getElementById(this.Task.buttonslayout);
     }
 
-    getButtType(){
+    getButtType() {
         return this.getElementById("el2")
     }
 
@@ -149,6 +161,16 @@ class PageHandler {
     setCloseCommentText(text) {
         this.Page.closeComment_virtual.value = text;
         this.Page.closeComment_el.value = text;
+    }
+
+    setTechInfoStyle(color, disable) {
+        this.Page.TechInfo_el.style.backgroundColor = color;
+        this.Page.TechInfo_el.disabled = disable;
+    }
+
+    setTechInfoText(text) {
+        this.Page.TechInfo_virtual.value = text;
+        this.Page.TechInfo_el.value = text;
     }
 
     genRow(el) {

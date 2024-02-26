@@ -1,6 +1,5 @@
 let Task;
-let commend;
-const regHash = /(#\S+)\s+?/gm;
+const regHash = /(#\S+)(\s+?|$)/gm;
 
 let conf = {};
 let pageHandler;
@@ -72,13 +71,13 @@ function tasktype() {
     Task = pageHandler.getRequestType();
     findService();
     // setcolor(Task.color);
-    checkHashtag();
+    checkContentInfo();
     addStyle();
 }
 
-function checkHashtag() {
-    commend = pageHandler.getCommentField();
-    closeText = pageHandler.getCloseFieldText();
+function checkContentInfo() {
+    pageHandler.getCommentField();
+    closeText = pageHandler.getTechInfoFieldText();
     if (Task.service) {
         const redex = new RegExp(treeHandler.getRegex(), "gm");
         let hashtagTree = redex.exec(closeText)
@@ -90,6 +89,12 @@ function checkHashtag() {
     else
         pageHandler.removeOverlay();
     let hashtagIt = closeText.match(regHash);
+    let text = closeText.replace(regHash, '').trim();
+    if (Task.type === "Inc")
+        if (!text)
+            pageHandler.setTechInfoStyle("#ff262638", false);
+        else
+            pageHandler.setTechInfoStyle(null, false);
     if (hashtagIt == null) {
         if (Task.disableComment) {
             pageHandler.setCloseCommentStyle(null, true);
@@ -218,7 +223,7 @@ function checkMaxHashtags(max) {
 }
 
 function hashSort(hashtag = ``) {
-    let text = pageHandler.getCloseFieldText();
+    let text = pageHandler.getTechInfoFieldText();
     const redex = new RegExp(treeHandler.getRegex(), "gm");
     let hashtagTree = redex.exec(text);
     if (hashtagTree === null)
@@ -245,7 +250,7 @@ function hashSort(hashtag = ``) {
         com += el;
     com += text + hashtagTree;
     setText(com);
-    checkHashtag();
+    checkContentInfo();
 }
 
 function addStyle() {
@@ -271,7 +276,7 @@ function addHashtag(hashtag) {
 
 function addHashtagToEnd(text) {
     redex = new RegExp(treeHandler.getRegex(), "gm");
-    let closeText = pageHandler.getCloseFieldText();
+    let closeText = pageHandler.getTechInfoFieldText();
     if (redex.exec(closeText) !== null)
         closeText = closeText.replace(redex, text);
     else
@@ -281,7 +286,7 @@ function addHashtagToEnd(text) {
 }
 
 function setText(text) {
-    pageHandler.setCloseCommentText(text)
+    pageHandler.setTechInfoText(text);
     generateEvent();
     tasktype();
 }
@@ -303,12 +308,13 @@ function generateButtAns() {
 function generateAnswer(answerText) {
     const regex = new RegExp(treeHandler.getRegex(), "gm");
     let text = pageHandler.getCloseFieldText();
-    let hashTree = regex.exec(text);
-    if (hashTree !== null) {
-        hashTree = hashTree[0].trim();
-        text = text.replace(regex, ``);
-    }
-    else
-        hashTree = "";
-    setText(text + " " + answerText + " " + hashTree);
+    // let hashTree = regex.exec(text);
+    // if (hashTree !== null) {
+    //     hashTree = hashTree[0].trim();
+    //     text = text.replace(regex, ``);
+    // }
+    // else
+    //     hashTree = "";
+    // setText(text + " " + answerText + " " + hashTree);
+    pageHandler.setCloseCommentText(text + " " + answerText);
 }

@@ -1,5 +1,5 @@
 let Scripts = {
-    version: 4,
+    version: 5,
     injected: {
         checkFields: {
             type: "js",
@@ -33,7 +33,7 @@ let Scripts = {
             type: "js",
             files: [
                 "addHashtag",
-                "hashtagTree",
+                "TreeHandler",
                 "pageHandler"
             ]
         },
