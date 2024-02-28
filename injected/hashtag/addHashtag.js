@@ -238,27 +238,33 @@ function hashSort(hashtag = ``) {
     let hashtagTree = redex.exec(text);
     if (hashtagTree === null)
         hashtagTree = "";
+    else
+        hashtagTree = hashtagTree.map(s => s.trim());
     text = text.replace(redex, ``);
     let hashtagIt = text.match(regHash);
-    if (hashtagIt)
-        hashtagIt.push(hashtag);
+    if (hashtagIt) {
+        if (hashtag !== "")
+            hashtagIt.push(hashtag);
+    }
     else
         hashtagIt = [hashtag];
+    hashtagIt = hashtagIt.map(s => s.trim());
     let hashArray = new Array(conf.hashtags.length + 1).fill(``);
     resetMaxHashtags();
     while (hashtagIt.length > 0) {
-        const lvElem = valideteHashtag(hashtagIt[0].trim())
+        const lvElem = valideteHashtag(hashtagIt[0] + " ")
         if (lvElem >= 0 && Task.sort)
             hashArray[lvElem] += hashtagIt[0];
         else
-            hashArray[hashArray.length - 1] += hashtagIt[0];
+            hashArray[hashArray.length - 1] += hashtagIt[0] + " ";
         text = text.replace(hashtagIt[0], ``);
         hashtagIt.shift();
     }
     let com = ``;
     for (const el of hashArray)
         com += el;
-    com += text + hashtagTree;
+    text = text.trim();
+    com += text + " " + hashtagTree;
     setText(com);
     checkContentInfo();
 }
