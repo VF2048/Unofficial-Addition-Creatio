@@ -303,6 +303,7 @@ function setText(text) {
 
 function generateEvent() {
     pageHandler.getElementById(Task.closeComment_el).focus();
+    pageHandler.getElementById(Task.TechInfo_el).focus();
 }
 
 function generateButtAns() {
@@ -316,7 +317,7 @@ function generateButtAns() {
 }
 
 function generateAnswer(answerText) {
-    const regex = new RegExp(treeHandler.getRegex(), "gm");
+    // const regex = new RegExp(treeHandler.getRegex(), "gm");
     let text = pageHandler.getCloseFieldText();
     // let hashTree = regex.exec(text);
     // if (hashTree !== null) {
@@ -327,4 +328,5 @@ function generateAnswer(answerText) {
     //     hashTree = "";
     // setText(text + " " + answerText + " " + hashTree);
     pageHandler.setCloseCommentText(text + " " + answerText);
+    generateEvent();
 }
