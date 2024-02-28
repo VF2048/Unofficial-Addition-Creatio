@@ -1,5 +1,6 @@
 let Task;
 const regHash = /(#\S+)(\s+?|$)/gm;
+let TechInfoState = false;
 
 let conf = {};
 let pageHandler;
@@ -62,14 +63,21 @@ function ifTask() {
         if (pageHandler.ifTask()) {
             clearInterval(ifReady);
             tasktype();
-            addButtons();
         }
     }, 100)
 }
 
 function tasktype() {
     Task = pageHandler.getRequestType();
+    try {
+        pageHandler.getCommentField();
+        closeText = pageHandler.getTechInfoFieldText();
+        TechInfoState = true;
+    } catch {
+        TechInfoState = false;
+    }
     findService();
+    addButtons();
     // setcolor(Task.color);
     checkContentInfo();
     addStyle();
@@ -77,7 +85,8 @@ function tasktype() {
 
 function checkContentInfo() {
     pageHandler.getCommentField();
-    closeText = pageHandler.getTechInfoFieldText();
+    if (!TechInfoState)
+        return;
     if (Task.service) {
         const redex = new RegExp(treeHandler.getRegex(), "gm");
         let hashtagTree = redex.exec(closeText)
@@ -122,14 +131,15 @@ function findService() {
 
 function generateButtHash() {
     let buttons = ``;
-    if (Task.hashtagsLevelStart)
-        for (let i = Task.hashtagsLevelStart - 1; i < Task.hashtagsLevelEnd; i++) {
-            let batton = ``;
-            for (let el of conf.hashtags[i]) {
-                batton += pageHandler.genButton("Hashtag", el);
+    if (TechInfoState)
+        if (Task.hashtagsLevelStart)
+            for (let i = Task.hashtagsLevelStart - 1; i < Task.hashtagsLevelEnd; i++) {
+                let batton = ``;
+                for (let el of conf.hashtags[i]) {
+                    batton += pageHandler.genButton("Hashtag", el);
+                }
+                buttons += pageHandler.genRow(batton);
             }
-            buttons += pageHandler.genRow(batton);
-        }
     return `
         <div  id="el1">
             ${buttons}
@@ -145,7 +155,7 @@ function addButtons() {
         parent.insertAdjacentHTML("beforebegin", generateButtHash());
     let type = pageHandler.getButtType();
     if (!type) {
-        if (Task.type === "Inc" && Task.service) {
+        if (Task.type === "Inc" && Task.service && TechInfoState) {
             parent.insertAdjacentHTML("afterend", pageHandler.generateButtType());
         }
     }
