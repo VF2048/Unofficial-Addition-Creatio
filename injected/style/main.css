@@ -100,3 +100,13 @@ td {
 .t-checkboxedit-wrap:checked {
     background-image: url("../Terrasoft/controls/checkboxedit/images/Checkbox_checked.svg");
 }
+
+.overlay-notation {
+    width: 20%;
+}
+
+.text-notation {
+    font-family: "Bpmonline Open Sans";
+    font-size: 1.3em;
+    color: red;
+}

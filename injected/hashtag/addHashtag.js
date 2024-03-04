@@ -90,7 +90,7 @@ function checkContentInfo() {
     if (Task.service) {
         const redex = new RegExp(treeHandler.getRegex(), "gm");
         let hashtagTree = redex.exec(closeText)
-        if (hashtagTree === null)
+        if (hashtagTree === null && Task.type === "Inc")
             pageHandler.addOverlay();
         else
             pageHandler.removeOverlay();
@@ -100,10 +100,14 @@ function checkContentInfo() {
     let hashtagIt = closeText.match(regHash);
     let text = closeText.replace(regHash, '').trim();
     if (Task.type === "Inc")
-        if (!text)
+        if (!text) {
             pageHandler.setTechInfoStyle("#ff262638", false);
-        else
+            pageHandler.setTechInfoNotation();
+        }
+        else {
             pageHandler.setTechInfoStyle(null, false);
+            pageHandler.removeTechInfoNotation();
+        }
     if (hashtagIt == null) {
         if (Task.disableComment) {
             pageHandler.setCloseCommentStyle(null, true);

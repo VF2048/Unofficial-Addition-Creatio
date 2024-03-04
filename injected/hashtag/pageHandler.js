@@ -7,9 +7,12 @@ class PageHandler {
         max: "maxElemRITM",
         closeComment_el: "NNCaseTaskPageDetailedResultMemoEdit-el",
         closeComment_virtual: "NNCaseTaskPageDetailedResultMemoEdit-virtual",
+        TechInfoContainer: "NNCaseTaskPageInformationClosedAndPausedGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsContainer",
+        TechInfoControl: "NNCaseTaskPageIteSecondHandMaterialsContainer_Control",
         TechInfo_el: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-el",
         TechInfo_virtual: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-virtual",
         closeCode: "NNCaseTaskPageIteClosureCodeComboBoxEdit-el",
+        closeCodeControl: "NNCaseTaskPageIteClosureCodeContainer_Control",
         buttonslayout: "NNCaseTaskPageInformationClosedAndPausedGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultContainer",
         answer: conf.Answers.RITM,
         sort: conf.sort.RITM,
@@ -26,9 +29,12 @@ class PageHandler {
         max: "maxElemINC",
         closeComment_el: "NNCaseTaskPageDetailedResultIncidentMemoEdit-el",
         closeComment_virtual: "NNCaseTaskPageDetailedResultIncidentMemoEdit-virtual",
+        TechInfoContainer: "NNCaseTaskPageInformationClosedAndPausedIncidentGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsIncidentContainer",
+        TechInfoControl: "NNCaseTaskPageIteSecondHandMaterialsIncidentContainer",
         TechInfo_el: "NNCaseTaskPageIteSecondHandMaterialsIncidentMemoEdit-el",
         TechInfo_virtual: "NNCaseTaskPageIteSecondHandMaterialsIncidentMemoEdit-virtual",
-        closeCode: "NNCaseTaskPageIteClosureCodeIncidentContainer_Control",
+        closeCode: "NNCaseTaskPageIteClosureCodeIncidentContainer",
+        closeCodeControl: "NNCaseTaskPageIteClosureCodeIncidentContainer_Control",
         buttonslayout: "NNCaseTaskPageInformationClosedAndPausedIncidentGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultIncidentContainer",
         answer: conf.Answers.INC,
         sort: conf.sort.INC,
@@ -79,18 +85,30 @@ class PageHandler {
         return document.querySelector(`[id*="ServiceOfferingLookupEdit-link-el"]`);
     }
 
+    setSizeTechInfo() {
+        this.Page.TechInfoContainer.style.width = "100%";
+    }
+
     getCommentField() {
+        const TechInfoContainer = this.getElementById(Task.TechInfoContainer);
+        const TechInfoControl = this.getElementById(Task.TechInfoControl);
         const TechInfo_el = this.getElementById(Task.TechInfo_el);
         const TechInfo_virtual = this.getElementById(Task.TechInfo_virtual);
         const closeComment_el = this.getElementById(Task.closeComment_el);
         const closeComment_virtual = this.getElementById(Task.closeComment_virtual);
+        const closeCodeControl = this.getElementById(Task.closeCodeControl);
         const closeCode = this.getElementById(Task.closeCode);
+        this.Page.TechInfoControl = TechInfoControl;
+        this.Page.TechInfoContainer = TechInfoContainer;
         this.Page.TechInfo_el = TechInfo_el;
         this.Page.TechInfo_virtual = TechInfo_virtual;
         this.Page.closeComment_el = closeComment_el;
         this.Page.closeComment_virtual = closeComment_virtual;
+        this.Page.closeCodeControl = closeCodeControl;
         this.Page.closeCode = closeCode;
-        return { TechInfo_el, TechInfo_virtual, closeCode };
+        if (TechInfoContainer)
+            this.setSizeTechInfo();
+        return { TechInfo_el, TechInfo_virtual, closeCodeControl };
     }
 
     getOverlay() {
@@ -99,6 +117,14 @@ class PageHandler {
 
     generateOverlay() {
         return `<div class="overlay" id="overlay"></div>`;
+    }
+
+    generateOverlayNotation() {
+        return `<div class="overlay-notation" id="overlay"><a class="text-notation">Нет привязки к типу проблемы!</a></div>`;
+    }
+
+    generateTechInfoNotation() {
+        return `<div class="overlay-notation" id="tech-info-notation"><a class="text-notation">С чем проблема? Как проявлялась? Как решено?</a></div>`;
     }
 
     getBody() {
@@ -119,8 +145,10 @@ class PageHandler {
     }
 
     addOverlay() {
-        if (!this.getOverlay())
-            this.Page.closeCode.insertAdjacentHTML("afterbegin", pageHandler.generateOverlay())
+        if (!this.getOverlay()) {
+            this.Page.closeCodeControl.insertAdjacentHTML("afterbegin", pageHandler.generateOverlay())
+            this.Page.closeCode.insertAdjacentHTML("beforeend", pageHandler.generateOverlayNotation())
+        }
     }
 
     removeOverlay() {
@@ -171,6 +199,22 @@ class PageHandler {
     setTechInfoText(text) {
         this.Page.TechInfo_virtual.value = text;
         this.Page.TechInfo_el.value = text;
+    }
+
+    getTechInfoNotation() {
+        return this.getElementById("tech-info-notation")
+    }
+
+    setTechInfoNotation() {
+        let TechInfoNotation = this.getTechInfoNotation();
+        if (!TechInfoNotation)
+            this.Page.TechInfoControl.insertAdjacentHTML("beforeend", pageHandler.generateTechInfoNotation())
+    }
+
+    removeTechInfoNotation() {
+        let TechInfoNotation = this.getTechInfoNotation();
+        if (TechInfoNotation)
+            TechInfoNotation.remove()
     }
 
     genRow(el) {
