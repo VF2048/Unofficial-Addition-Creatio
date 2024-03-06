@@ -100,14 +100,14 @@ function checkContentInfo() {
     let hashtagIt = closeText.match(regHash);
     let text = closeText.replace(regHash, '').trim();
     if (Task.type === "Inc")
-        if (!text) {
-            pageHandler.setTechInfoStyle("#ff262638", false);
-            pageHandler.setTechInfoNotation();
-        }
-        else {
-            pageHandler.setTechInfoStyle(null, false);
-            pageHandler.removeTechInfoNotation();
-        }
+        // if (!text) {
+        //     pageHandler.setTechInfoStyle("#ff262638", false);
+        //     pageHandler.setTechInfoNotation();
+        // }
+        // else {
+        //     pageHandler.setTechInfoStyle(null, false);
+        //     pageHandler.removeTechInfoNotation();
+        // }
     if (hashtagIt == null) {
         if (Task.disableComment) {
             pageHandler.setCloseCommentStyle(null, true);
@@ -338,5 +338,5 @@ function generateAnswer(answerText) {
     //     hashTree = "";
     // setText(text + " " + answerText + " " + hashTree);
     pageHandler.setCloseCommentText(text + " " + answerText);
-    generateEvent();
+    pageHandler.getElementById(Task.closeComment_el).focus();
 }
