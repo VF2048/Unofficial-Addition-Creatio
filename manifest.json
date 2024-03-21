@@ -10,7 +10,7 @@
         "32": "img/favicon-32x32.png",
         "48": "img/favicon-48x48.png"
     },
-    "version": "3.0",
+    "version": "3.1",
     "manifest_version": 3,
     "description": "-",
     "content_scripts": [
