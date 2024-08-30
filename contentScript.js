@@ -1,10 +1,11 @@
 let Scripts = {
-    version: 5,
+    version: 6,
     injected: {
         checkFields: {
             type: "js",
             files: [
-                "service"
+                "service",
+                "ke"
             ]
         },
         coloring: {

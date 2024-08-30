@@ -37,6 +37,10 @@ function setConfig() {
             RITM: sortEnableRITM,
             INC: sortEnableINC,
         },
+        clearButton:{
+            RITM: clearButtonRITM,
+            INC: clearButtonINC,
+        },
         hashtags: Hashtags,
         disableComment: {
             RITM: disableCommentRitm,
@@ -147,7 +151,8 @@ function generateButtHash() {
     return `
         <div  id="el1">
             ${buttons}
-            ${Task.sort ? pageHandler.genRow(`<button class="Sort">Отсортировать #</button>`) : ``}
+             ${Task.sort ? pageHandler.genRow(`<button class="Sort">Отсортировать #</button>`) : ``}
+             ${Task.clearButton ? pageHandler.genRow(`<button class="ClearButton">ClearText</button>`) : ``}
             ${generateButtAns()}
         </div>`;
 }
@@ -180,6 +185,9 @@ function buttonHandler() {
                         break;
                     case "Sort":
                         hashSort();
+                        break;
+					case "ClearButton":
+                         pageHandler.setCloseCommentText(" ");
                         break;
                     case "Answer":
                         generateAnswer(e.target.title);

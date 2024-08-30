@@ -11,11 +11,12 @@ class PageHandler {
         TechInfoControl: "NNCaseTaskPageIteSecondHandMaterialsContainer_Control",
         TechInfo_el: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-el",
         TechInfo_virtual: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-virtual",
-        closeCode: "NNCaseTaskPageIteClosureCodeComboBoxEdit-el",
+        closeCode: "NNCaseTaskPageIteClosureCodeContainer",
         closeCodeControl: "NNCaseTaskPageIteClosureCodeContainer_Control",
         buttonslayout: "NNCaseTaskPageInformationClosedAndPausedGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultContainer",
         answer: conf.Answers.RITM,
         sort: conf.sort.RITM,
+        clearButton: conf.clearButton.RITM,
         hashtagsLevelStart: conf.hashLevel.RITM.start,
         hashtagsLevelEnd: conf.hashLevel.RITM.end,
         hashtagCont: conf.hashCount.RITM,
@@ -38,6 +39,7 @@ class PageHandler {
         buttonslayout: "NNCaseTaskPageInformationClosedAndPausedIncidentGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultIncidentContainer",
         answer: conf.Answers.INC,
         sort: conf.sort.INC,
+        clearButton: conf.clearButton.INC,
         hashtagsLevelStart: conf.hashLevel.INC.start,
         hashtagsLevelEnd: conf.hashLevel.INC.end,
         hashtagCont: conf.hashCount.INC,
@@ -119,8 +121,16 @@ class PageHandler {
         return `<div class="overlay" id="overlay"></div>`;
     }
 
+    getNotationKE() {
+        return this.getElementById("NotationKE");
+    }
+
     generateOverlayNotation() {
         return `<div class="overlay-notation" id="overlay"><a class="text-notation">Нет привязки к типу проблемы!</a></div>`;
+    }
+
+    generateNotationKE() {
+        return `<div class="NotationKE" id="NotationKE"><a class="text-notation">Нет привязки к KE!</a></div>`;
     }
 
     generateTechInfoNotation() {
@@ -151,10 +161,23 @@ class PageHandler {
         }
     }
 
+    addNotationKE() {
+        if (this.Page.closeCode)
+            if (!this.getNotationKE()) {
+                this.Page.closeCode.insertAdjacentHTML("beforeend", pageHandler.generateNotationKE())
+            }
+    }
+
     removeOverlay() {
         let overlay = this.getOverlay();
         if (overlay)
             overlay.remove();
+    }
+
+    removeNotationKE() {
+        let NotationKE = this.getNotationKE();
+        if (NotationKE)
+            NotationKE.remove();
     }
 
     getElementById(id) {
