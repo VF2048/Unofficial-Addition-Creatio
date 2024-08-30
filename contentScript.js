@@ -60,28 +60,26 @@ function getLocalFile(url, regex) {
         .catch(error => console.log(`Не был найден файл ${url}`));
 }
 
-async function checkhashtagTreeVersion() {
-
-
-    let netVersion = await chrome.runtime.sendMessage({ action: "fetchData", url: "file://softcloud//Library//SoftArm//hashtagTree//hashtagTree.js" });
-    if (!netVersion) {
-        alert("Не удалось найти hashtagTree.js на softcloud!");
-        return;
-    }
-    let version = await getLocalFile("injected/configs/hashtagTree.js", /const hashtagVersion = "([^"]+)"/);
-    if (version !== netVersion) {
-        chrome.runtime.sendMessage({ action: "download", url: "file://softcloud//Library//SoftArm//hashtagTree//hashtagTree.js" });
-        alert("Файл hashtagTree.js устарел и требует замены.\nСкачайте данный файл и поместите его в папку расширения\ninjected/configs/hashtagTree.js");
-    }
-    let config = await getLocalFile("injected/configs/configHashtag.js", /(startLevelRitm)/);
-    if (typeof config === "undefined") {
-        chrome.runtime.sendMessage({ action: "download", url: "file://softcloud//Library//SoftArm//hashtagTree//configHashtag.js" });
-        alert("У вас отсутствует файл конфигурации!\nРазрешите скачивание и переместите его в папку расширения\ninjected/configs/configHashtag.js");
-    }
-}
+// async function checkhashtagTreeVersion() {
+//     let netVersion = await chrome.runtime.sendMessage({ action: "fetchData", url: "file://softcloud//Library//SoftArm//hashtagTree//hashtagTree.js" });
+//     if (!netVersion) {
+//         alert("Не удалось найти hashtagTree.js на softcloud!");
+//         return;
+//     }
+//     let version = await getLocalFile("injected/configs/hashtagTree.js", /const hashtagVersion = "([^"]+)"/);
+//     if (version !== netVersion) {
+//         chrome.runtime.sendMessage({ action: "download", url: "file://softcloud//Library//SoftArm//hashtagTree//hashtagTree.js" });
+//         alert("Файл hashtagTree.js устарел и требует замены.\nСкачайте данный файл и поместите его в папку расширения\ninjected/configs/hashtagTree.js");
+//     }
+//     let config = await getLocalFile("injected/configs/configHashtag.js", /(startLevelRitm)/);
+//     if (typeof config === "undefined") {
+//         chrome.runtime.sendMessage({ action: "download", url: "file://softcloud//Library//SoftArm//hashtagTree//configHashtag.js" });
+//         alert("У вас отсутствует файл конфигурации!\nРазрешите скачивание и переместите его в папку расширения\ninjected/configs/configHashtag.js");
+//     }
+// }
 
 async function main() {
-    await checkhashtagTreeVersion();
+    // await checkhashtagTreeVersion();
     let conf = await getConf();
     for (const [folderMain, folder] of Object.entries(conf)) {
         for (const [folderName, elem] of Object.entries(folder))
