@@ -37,7 +37,7 @@ function setConfig() {
             RITM: sortEnableRITM,
             INC: sortEnableINC,
         },
-        clearButton:{
+        clearButton: {
             RITM: clearButtonRITM,
             INC: clearButtonINC,
         },
@@ -103,30 +103,30 @@ function checkContentInfo() {
         pageHandler.removeOverlay();
     let hashtagIt = closeText.match(regHash);
     let text = closeText.replace(regHash, '').trim();
-    if (Task.type === "Inc")
-        // if (!text) {
-        //     pageHandler.setTechInfoStyle("#ff262638", false);
-        //     pageHandler.setTechInfoNotation();
-        // }
-        // else {
-        //     pageHandler.setTechInfoStyle(null, false);
-        //     pageHandler.removeTechInfoNotation();
-        // }
-    if (hashtagIt == null) {
-        if (Task.disableComment) {
-            pageHandler.setCloseCommentStyle(null, true);
-            return;
-        }
-        else {
-            pageHandler.setCloseCommentStyle(null, false);
-        }
-    }
-    else if (hashtagIt.length < Task.hashtagCont && Task.disableComment == "one") {
-        pageHandler.setCloseCommentStyle("#ff262638", false);
-    }
-    else if (hashtagIt.length >= Task.hashtagCont) {
-        pageHandler.setCloseCommentStyle(null, false);
-    }
+    // if (Task.type === "Inc")
+    // if (!text) {
+    //     pageHandler.setTechInfoStyle("#ff262638", false);
+    //     pageHandler.setTechInfoNotation();
+    // }
+    // else {
+    //     pageHandler.setTechInfoStyle(null, false);
+    //     pageHandler.removeTechInfoNotation();
+    // }
+    // if (hashtagIt == null) {
+    //     if (Task.disableComment) {
+    //         pageHandler.setCloseCommentStyle(null, true);
+    //         return;
+    //     }
+    //     else {
+    //         pageHandler.setCloseCommentStyle(null, false);
+    //     }
+    // }
+    // else if (hashtagIt.length < Task.hashtagCont && Task.disableComment == "one") {
+    //     pageHandler.setCloseCommentStyle("#ff262638", false);
+    // }
+    // else if (hashtagIt.length >= Task.hashtagCont) {
+    //     pageHandler.setCloseCommentStyle(null, false);
+    // }
 }
 
 function findService() {
@@ -186,8 +186,8 @@ function buttonHandler() {
                     case "Sort":
                         hashSort();
                         break;
-					case "ClearButton":
-                         pageHandler.setCloseCommentText(" ");
+                    case "ClearButton":
+                        pageHandler.setCloseCommentText(" ");
                         break;
                     case "Answer":
                         generateAnswer(e.target.title);
@@ -320,8 +320,10 @@ function setText(text) {
 }
 
 function generateEvent() {
-    pageHandler.getElementById(Task.closeComment_el).focus();
-    pageHandler.getElementById(Task.TechInfo_el).focus();
+    if (pageHandler.Page.closeComment_el)
+        pageHandler.Page.closeComment_el.focus();
+    if (pageHandler.Page.TechInfo_el)
+        pageHandler.Page.TechInfo_el.focus();
 }
 
 function generateButtAns() {
@@ -346,5 +348,6 @@ function generateAnswer(answerText) {
     //     hashTree = "";
     // setText(text + " " + answerText + " " + hashTree);
     pageHandler.setCloseCommentText(text + " " + answerText);
-    pageHandler.getElementById(Task.closeComment_el).focus();
+    if (pageHandler.Page.closeComment_el)
+        pageHandler.Page.closeComment_el.focus();
 }

@@ -104,8 +104,10 @@ class PageHandler {
         this.Page.TechInfoContainer = TechInfoContainer;
         this.Page.TechInfo_el = TechInfo_el;
         this.Page.TechInfo_virtual = TechInfo_virtual;
-        this.Page.closeComment_el = closeComment_el;
-        this.Page.closeComment_virtual = closeComment_virtual;
+        if (closeComment_el && closeComment_virtual) {
+            this.Page.closeComment_el = closeComment_el;
+            this.Page.closeComment_virtual = closeComment_virtual;
+        }
         this.Page.closeCodeControl = closeCodeControl;
         this.Page.closeCode = closeCode;
         if (TechInfoContainer)
@@ -189,7 +191,8 @@ class PageHandler {
     }
 
     getCloseFieldText() {
-        return this.Page.closeComment_virtual.value;
+        if (this.Page.closeComment_virtual)
+            return this.Page.closeComment_virtual.value;
     }
 
     getCloseFieldTextEl() {
@@ -205,13 +208,17 @@ class PageHandler {
     }
 
     setCloseCommentStyle(color, disable) {
-        this.Page.closeComment_el.style.backgroundColor = color;
-        this.Page.closeComment_el.disabled = disable;
+        if (this.Page.closeComment_el) {
+            this.Page.closeComment_el.style.backgroundColor = color;
+            this.Page.closeComment_el.disabled = disable;
+        }
     }
 
     setCloseCommentText(text) {
-        this.Page.closeComment_virtual.value = text;
-        this.Page.closeComment_el.value = text;
+        if (this.Page.closeComment_virtual && this.Page.closeComment_el) {
+            this.Page.closeComment_virtual.value = text;
+            this.Page.closeComment_el.value = text;
+        }
     }
 
     setTechInfoStyle(color, disable) {

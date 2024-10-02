@@ -15,13 +15,14 @@ function checkValueKE(elemKE) {
     const elemKEValue = document.querySelectorAll(`[id*="NNCaseTaskPageConfItemLookupEdit-link-el"]`)
     if (elemKEValue.length > 0) {
         elemKEValue.forEach((elemValue, key) => {
-            if (elemValue.innerText != "") {
-                elemValue.style.backgroundColor = null;
-                pageHandler.removeNotationKE();
-            } else {
-                elemKE.style.backgroundColor = "#ff262638";
-                pageHandler.addNotationKE();
-            }
+            if (pageHandler.Page.TechInfo_el)
+                if (elemValue.innerText != "") {
+                    elemValue.style.backgroundColor = null;
+                    pageHandler.removeNotationKE();
+                } else {
+                    elemKE.style.backgroundColor = "#ff262638";
+                    pageHandler.addNotationKE();
+                }
         })
     }
 }
