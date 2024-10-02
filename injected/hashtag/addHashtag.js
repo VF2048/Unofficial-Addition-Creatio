@@ -38,8 +38,8 @@ function setConfig() {
             INC: sortEnableINC,
         },
         clearButton: {
-            RITM: clearButtonRITM,
-            INC: clearButtonINC,
+            RITM: typeof clearButtonRITM !== "undefined" ? clearButtonRITM : false,
+            INC: typeof clearButtonINC !== "undefined" ? clearButtonINC : false,
         },
         hashtags: Hashtags,
         disableComment: {
