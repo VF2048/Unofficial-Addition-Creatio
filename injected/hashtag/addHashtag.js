@@ -66,25 +66,35 @@ function ifTask() {
     const ifReady = setInterval(function () {
         if (pageHandler.ifTask()) {
             clearInterval(ifReady);
-            tasktype();
+            getTaskType();
         }
     }, 100)
 }
 
-function tasktype() {
+function getFilds() {
+    const ifFieldsFound = setInterval(() => {
+        let fieldsState = false;
+        try {
+            fieldsState = pageHandler.getCommentField();
+            closeText = pageHandler.getTechInfoFieldText();
+            TechInfoState = true;
+        } catch {
+            TechInfoState = false;
+        }
+        if (fieldsState) {
+            clearInterval(ifFieldsFound);
+            findService();
+            addButtons();
+            // setcolor(Task.color);
+            checkContentInfo();
+            addStyle();
+        }
+    }, 100)
+}
+
+function getTaskType() {
     Task = pageHandler.getRequestType();
-    try {
-        pageHandler.getCommentField();
-        closeText = pageHandler.getTechInfoFieldText();
-        TechInfoState = true;
-    } catch {
-        TechInfoState = false;
-    }
-    findService();
-    addButtons();
-    // setcolor(Task.color);
-    checkContentInfo();
-    addStyle();
+    getFilds();
 }
 
 function checkContentInfo() {
@@ -178,22 +188,22 @@ function buttonHandler() {
     let el1 = pageHandler.getElementById("el1");
     if (el1)
         el1.onclick = function (e) {
-            if (e.target.tagName == "BUTTON") {
-                switch (e.target.className) {
-                    case "Hashtag":
-                        addHashtag(e.target.textContent + " ");
-                        break;
-                    case "Sort":
-                        hashSort();
-                        break;
-                    case "ClearButton":
-                        pageHandler.setCloseCommentText(" ");
-                        break;
-                    case "Answer":
-                        generateAnswer(e.target.title);
-                        break;
-                }
-            }
+            if (e.target.tagName == "BUTTON")
+                if (pageHandler.getCommentField())
+                    switch (e.target.className) {
+                        case "Hashtag":
+                            addHashtag(e.target.textContent + " ");
+                            break;
+                        case "Sort":
+                            hashSort();
+                            break;
+                        case "ClearButton":
+                            pageHandler.setCloseCommentText(" ");
+                            break;
+                        case "Answer":
+                            generateAnswer(e.target.title);
+                            break;
+                    }
         };
     if (!Task.service)
         return;
@@ -299,7 +309,7 @@ function addStyle() {
 function addHashtag(hashtag) {
     hashSort(hashtag);
     generateEvent();
-    tasktype();
+    getTaskType();
 }
 
 function addHashtagToEnd(text) {
@@ -316,7 +326,7 @@ function addHashtagToEnd(text) {
 function setText(text) {
     pageHandler.setTechInfoText(text);
     generateEvent();
-    tasktype();
+    getTaskType();
 }
 
 function generateEvent() {

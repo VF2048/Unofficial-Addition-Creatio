@@ -10,14 +10,15 @@
         "32": "img/favicon-32x32.png",
         "48": "img/favicon-48x48.png"
     },
-    "version": "3.4",
+    "version": "3.5",
     "manifest_version": 3,
     "description": "Расширение для браузера, которое добавляет дополнительный функционал для удобной работы с заявками в Creatio.",
     "content_scripts": [
         {
             "matches": [
                 "https://creatio.nornik.ru/0/Nui/ViewModule.aspx*",
-                "https://sirius.nornik.ru/0/Nui/ViewModule.aspx*"
+                "https://sirius.nornik.ru/0/Nui/ViewModule.aspx*",
+                "https://creatiotest2.nornik.ru/0/Nui/ViewModule.aspx*"
             ],
             "run_at": "document_start",
             "js": [

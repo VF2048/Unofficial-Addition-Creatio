@@ -5,7 +5,7 @@ class PageHandler {
     #Ritm = {
         type: "Ritm",
         max: "maxElemRITM",
-        closeComment_el: "NNCaseTaskPageDetailedResultMemoEdit-el",
+        closeComment_el: "#NNCaseTaskPageDetailedResultContainer_Control",
         closeComment_virtual: "NNCaseTaskPageDetailedResultMemoEdit-virtual",
         TechInfoContainer: "NNCaseTaskPageInformationClosedAndPausedGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsContainer",
         TechInfoControl: "NNCaseTaskPageIteSecondHandMaterialsContainer_Control",
@@ -28,7 +28,7 @@ class PageHandler {
     #Inc = {
         type: "Inc",
         max: "maxElemINC",
-        closeComment_el: "NNCaseTaskPageDetailedResultIncidentMemoEdit-el",
+        closeComment_el: "#NNCaseTaskPageDetailedResultIncidentContainer_Control",
         closeComment_virtual: "NNCaseTaskPageDetailedResultIncidentMemoEdit-virtual",
         TechInfoContainer: "NNCaseTaskPageInformationClosedAndPausedIncidentGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsIncidentContainer",
         TechInfoControl: "NNCaseTaskPageIteSecondHandMaterialsIncidentContainer",
@@ -87,6 +87,13 @@ class PageHandler {
         return document.querySelector(`[id*="ServiceOfferingLookupEdit-link-el"]`);
     }
 
+    getIframe(elem) {
+        let doc = document.querySelector(elem + " iframe")
+        if (doc) {
+            return doc.contentDocument.body;
+        }
+    }
+
     setSizeTechInfo() {
         this.Page.TechInfoContainer.style.width = "100%";
     }
@@ -96,23 +103,28 @@ class PageHandler {
         const TechInfoControl = this.getElementById(Task.TechInfoControl);
         const TechInfo_el = this.getElementById(Task.TechInfo_el);
         const TechInfo_virtual = this.getElementById(Task.TechInfo_virtual);
-        const closeComment_el = this.getElementById(Task.closeComment_el);
-        const closeComment_virtual = this.getElementById(Task.closeComment_virtual);
+        const closeComment_el = this.getIframe(Task.closeComment_el);
+        // const closeComment_virtual = this.getElementById(Task.closeComment_virtual);
         const closeCodeControl = this.getElementById(Task.closeCodeControl);
         const closeCode = this.getElementById(Task.closeCode);
         this.Page.TechInfoControl = TechInfoControl;
         this.Page.TechInfoContainer = TechInfoContainer;
         this.Page.TechInfo_el = TechInfo_el;
         this.Page.TechInfo_virtual = TechInfo_virtual;
-        if (closeComment_el && closeComment_virtual) {
-            this.Page.closeComment_el = closeComment_el;
-            this.Page.closeComment_virtual = closeComment_virtual;
+        if (closeComment_el) {
+            if (closeComment_el.clientHeight > 0) {
+                this.Page.closeComment_el = closeComment_el;
+                this.Page.closeComment_virtual = closeComment_el.children[0];
+            }
         }
         this.Page.closeCodeControl = closeCodeControl;
         this.Page.closeCode = closeCode;
         if (TechInfoContainer)
             this.setSizeTechInfo();
-        return { TechInfo_el, TechInfo_virtual, closeCodeControl };
+        if (this.Page.closeComment_el && closeCodeControl && closeCode !== "undefined")
+            return true;
+        else
+            return false;
     }
 
     getOverlay() {
@@ -192,7 +204,7 @@ class PageHandler {
 
     getCloseFieldText() {
         if (this.Page.closeComment_virtual)
-            return this.Page.closeComment_virtual.value;
+            return this.Page.closeComment_virtual.innerText;
     }
 
     getCloseFieldTextEl() {
@@ -215,10 +227,8 @@ class PageHandler {
     }
 
     setCloseCommentText(text) {
-        if (this.Page.closeComment_virtual && this.Page.closeComment_el) {
-            this.Page.closeComment_virtual.value = text;
-            this.Page.closeComment_el.value = text;
-        }
+        if (this.Page.closeComment_virtual)
+            this.Page.closeComment_virtual.innerText = text;
     }
 
     setTechInfoStyle(color, disable) {
