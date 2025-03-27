@@ -73,6 +73,10 @@ function ifTask() {
 
 function getFilds() {
     const ifFieldsFound = setInterval(() => {
+        if (!pageHandler.ifTask()) {
+            clearInterval(ifFieldsFound);
+            return;
+        }
         let fieldsState = false;
         try {
             fieldsState = pageHandler.getCommentField();
@@ -80,6 +84,10 @@ function getFilds() {
             TechInfoState = true;
         } catch {
             TechInfoState = false;
+        }
+        if (!TechInfoState) {
+            pageHandler.select_TechInfo();
+            return;
         }
         if (fieldsState) {
             clearInterval(ifFieldsFound);
@@ -89,7 +97,7 @@ function getFilds() {
             checkContentInfo();
             addStyle();
         }
-    }, 100)
+    }, 1000)
 }
 
 function getTaskType() {
@@ -255,6 +263,10 @@ function checkMaxHashtags(max) {
 }
 
 function hashSort(hashtag = ``) {
+    if (pageHandler.Page.new_visualization) {
+        pageHandler.to_additional_info_page();
+    }
+    pageHandler.getCommentField();
     let text = pageHandler.getTechInfoFieldText();
     const redex = new RegExp(treeHandler.getRegex(), "gm");
     let hashtagTree = redex.exec(text);
@@ -308,32 +320,54 @@ function addStyle() {
 
 function addHashtag(hashtag) {
     hashSort(hashtag);
-    generateEvent();
+    // generateEvent();
     getTaskType();
 }
 
 function addHashtagToEnd(text) {
     redex = new RegExp(treeHandler.getRegex(), "gm");
+    if (pageHandler.Page.new_visualization) {
+        pageHandler.to_additional_info_page();
+    }
     let closeText = pageHandler.getTechInfoFieldText();
     if (redex.exec(closeText) !== null)
         closeText = closeText.replace(redex, text);
     else
         closeText += text;
     setText(closeText);
-    hashSort();
+    if (!pageHandler.Page.new_visualization) {
+        hashSort();
+    }
 }
 
 function setText(text) {
+    if (pageHandler.Page.new_visualization) {
+        pageHandler.to_additional_info_page();
+    }
+    pageHandler.getCommentField();
+    pageHandler.Page.TechInfo_el.click();
+    pageHandler.Page.TechInfo_el.focus();
     pageHandler.setTechInfoText(text);
     generateEvent();
     getTaskType();
 }
 
 function generateEvent() {
-    if (pageHandler.Page.closeComment_el)
-        pageHandler.Page.closeComment_el.focus();
-    if (pageHandler.Page.TechInfo_el)
+    if (pageHandler.Page.TechInfo_el) {
+        if (pageHandler.Page.new_visualization) {
+            pageHandler.to_additional_info_page();
+        }
+        pageHandler.Page.TechInfo_el.click();
         pageHandler.Page.TechInfo_el.focus();
+
+    }
+    setTimeout(() => {
+        if (pageHandler.Page.new_visualization) {
+            pageHandler.to_main_page();
+        }
+        if (pageHandler.Page.closeComment_el)
+            pageHandler.Page.closeComment_el.focus();
+    }, 10);
 }
 
 function generateButtAns() {

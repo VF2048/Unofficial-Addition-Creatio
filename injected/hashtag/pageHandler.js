@@ -6,14 +6,24 @@ class PageHandler {
         type: "Ritm",
         max: "maxElemRITM",
         closeComment_el: "#NNCaseTaskPageDetailedResultContainer_Control",
+        closeComment_elNew: "#NNCaseTaskPageDetailedResultContainer_Control",
         closeComment_virtual: "NNCaseTaskPageDetailedResultMemoEdit-virtual",
         TechInfoContainer: "NNCaseTaskPageInformationClosedAndPausedGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsContainer",
+        TechInfoContainerNew: "NNCaseTaskPageNNAdditionalParametersGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsContainer",
         TechInfoControl: "NNCaseTaskPageIteSecondHandMaterialsContainer_Control",
+        TechInfoControlNew: "NNCaseTaskPageIteSecondHandMaterialsContainer",
         TechInfo_el: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-el",
+        TechInfo_elNew: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-el",
         TechInfo_virtual: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-virtual",
+        TechInfo_virtualNew: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-virtual",
         closeCode: "NNCaseTaskPageIteClosureCodeContainer",
+        closeCodeNew: "NNCaseTaskPageIteClosureCodeContainer",
         closeCodeControl: "NNCaseTaskPageIteClosureCodeContainer_Control",
+        closeCodeControlNew: "NNCaseTaskPageIteClosureCodeContainer_Control",
         buttonslayout: "NNCaseTaskPageInformationClosedAndPausedGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultContainer",
+        buttonslayoutNew: "NNCaseTaskPageNNClosureGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultContainer",
+        page_selector: "NNCaseTaskPageTabsTabPanel-tabpanel-items",
+        TechInfo_find: false,
         answer: conf.Answers.RITM,
         sort: conf.sort.RITM,
         clearButton: conf.clearButton.RITM,
@@ -29,14 +39,26 @@ class PageHandler {
         type: "Inc",
         max: "maxElemINC",
         closeComment_el: "#NNCaseTaskPageDetailedResultIncidentContainer_Control",
+        closeComment_elNew: "#NNCaseTaskPageDetailedResultContainer_Control",
         closeComment_virtual: "NNCaseTaskPageDetailedResultIncidentMemoEdit-virtual",
+        // closeComment_virtualNew: "NNCaseTaskPageDetailedResultMemoEdit-virtual",
         TechInfoContainer: "NNCaseTaskPageInformationClosedAndPausedIncidentGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsIncidentContainer",
+        TechInfoContainerNew: "NNCaseTaskPageNNAdditionalParametersGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsContainer",
         TechInfoControl: "NNCaseTaskPageIteSecondHandMaterialsIncidentContainer",
+        TechInfoControlNew: "NNCaseTaskPageIteSecondHandMaterialsContainer",
         TechInfo_el: "NNCaseTaskPageIteSecondHandMaterialsIncidentMemoEdit-el",
+        TechInfo_elNew: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-el",
         TechInfo_virtual: "NNCaseTaskPageIteSecondHandMaterialsIncidentMemoEdit-virtual",
+        TechInfo_virtualNew: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-virtual",
         closeCode: "NNCaseTaskPageIteClosureCodeIncidentContainer",
+        closeCodeNew: "NNCaseTaskPageIteClosureCodeContainer",
         closeCodeControl: "NNCaseTaskPageIteClosureCodeIncidentContainer_Control",
+        closeCodeControlNew: "NNCaseTaskPageIteClosureCodeContainer_Control",
         buttonslayout: "NNCaseTaskPageInformationClosedAndPausedIncidentGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultIncidentContainer",
+        buttonslayoutNew: "NNCaseTaskPageNNClosureGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultContainer",
+        page_selector: "NNCaseTaskPageTabsTabPanel-tabpanel-items",
+        new_visualization: false,
+        TechInfo_find: false,
         answer: conf.Answers.INC,
         sort: conf.sort.INC,
         clearButton: conf.clearButton.INC,
@@ -94,19 +116,26 @@ class PageHandler {
         }
     }
 
+    getIframe(elem1, elem2) {
+        let doc = document.querySelector(elem1 + " iframe") || document.querySelector(elem2 + " iframe")
+        if (doc) {
+            return doc.contentDocument.body;
+        }
+    }
+
     setSizeTechInfo() {
         this.Page.TechInfoContainer.style.width = "100%";
     }
 
     getCommentField() {
-        const TechInfoContainer = this.getElementById(Task.TechInfoContainer);
-        const TechInfoControl = this.getElementById(Task.TechInfoControl);
-        const TechInfo_el = this.getElementById(Task.TechInfo_el);
-        const TechInfo_virtual = this.getElementById(Task.TechInfo_virtual);
-        const closeComment_el = this.getIframe(Task.closeComment_el);
+        const TechInfoContainer = this.getElementById(Task.TechInfoContainer, Task.TechInfoContainerNew);
+        const TechInfoControl = this.getElementById(Task.TechInfoControl, Task.TechInfoControlNew);
+        const TechInfo_el = this.getElementById(Task.TechInfo_el, Task.TechInfo_elNew);
+        const TechInfo_virtual = this.getElementById(Task.TechInfo_virtual, Task.TechInfo_virtualNew);
+        const closeComment_el = this.getIframe(Task.closeComment_el, Task.closeComment_elNew);
         // const closeComment_virtual = this.getElementById(Task.closeComment_virtual);
-        const closeCodeControl = this.getElementById(Task.closeCodeControl);
-        const closeCode = this.getElementById(Task.closeCode);
+        const closeCodeControl = this.getElementById(Task.closeCodeControl, Task.closeCodeControlNew);
+        const closeCode = this.getElementById(Task.closeCode, Task.closeCodeNew);
         this.Page.TechInfoControl = TechInfoControl;
         this.Page.TechInfoContainer = TechInfoContainer;
         this.Page.TechInfo_el = TechInfo_el;
@@ -119,12 +148,38 @@ class PageHandler {
         }
         this.Page.closeCodeControl = closeCodeControl;
         this.Page.closeCode = closeCode;
-        if (TechInfoContainer)
-            this.setSizeTechInfo();
+        if (TechInfoContainer) {
+            if (TechInfoContainer.id == Task.TechInfoContainer) {
+                this.setSizeTechInfo();
+                this.Page.TechInfo_find = true;
+            }
+            if (TechInfoContainer.id == Task.TechInfoContainerNew)
+                this.Page.TechInfo_find = true;
+        }
+        else {
+            this.Page.TechInfo_find = false;
+        }
         if (this.Page.closeComment_el && closeCodeControl && closeCode !== "undefined")
             return true;
         else
             return false;
+    }
+
+    select_TechInfo() {
+        this.Page.new_visualization = true
+        const selector = this.getElementById(this.Task.page_selector);
+        selector.children[2].click();
+        selector.children[0].click();
+    }
+
+    to_additional_info_page() {
+        const selector = this.getElementById(this.Task.page_selector);
+        selector.children[2].click();
+    }
+
+    to_main_page() {
+        const selector = this.getElementById(this.Task.page_selector);
+        selector.children[0].click();
     }
 
     getOverlay() {
@@ -198,6 +253,10 @@ class PageHandler {
         return document.getElementById(id);
     }
 
+    getElementById(id1, id2) {
+        return document.getElementById(id1) || document.getElementById(id2);
+    }
+
     getTechInfoFieldText() {
         return this.Page.TechInfo_virtual.value;
     }
@@ -212,7 +271,7 @@ class PageHandler {
     }
 
     getButtonslayout() {
-        return this.getElementById(this.Task.buttonslayout);
+        return this.getElementById(this.Task.buttonslayout, this.Task.buttonslayoutNew);
     }
 
     getButtType() {
