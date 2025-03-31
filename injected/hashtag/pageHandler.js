@@ -80,6 +80,7 @@ class PageHandler {
                 return true;
             }
         }
+        this.Page.new_visualization = false;
         return false;
     }
 
@@ -166,10 +167,12 @@ class PageHandler {
     }
 
     select_TechInfo() {
-        this.Page.new_visualization = true
-        const selector = this.getElementById(this.Task.page_selector);
-        selector.children[2].click();
-        selector.children[0].click();
+        if (!this.Page.new_visualization) {
+            this.Page.new_visualization = true
+            const selector = this.getElementById(this.Task.page_selector);
+            selector.children[2].click();
+            selector.children[0].click();
+        }
     }
 
     to_additional_info_page() {
