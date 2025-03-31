@@ -23,7 +23,7 @@
             ],
             "run_at": "document_start",
             "js": [
-                "contentscript.js"
+                "contentScript.js"
             ]
         }
     ],
@@ -47,7 +47,6 @@
         "activeTab",
         "scripting",
         "tabs",
-        "activeTab",
         "downloads"
     ],
     "background": {
