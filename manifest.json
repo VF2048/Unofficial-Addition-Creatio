@@ -46,8 +46,7 @@
         "storage",
         "activeTab",
         "scripting",
-        "tabs",
-        "downloads"
+        "tabs"
     ],
     "background": {
         "service_worker": "background.js"
