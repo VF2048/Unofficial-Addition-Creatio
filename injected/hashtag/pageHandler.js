@@ -27,6 +27,7 @@ class PageHandler {
         answer: conf.Answers.RITM,
         sort: conf.sort.RITM,
         clearButton: conf.clearButton.RITM,
+        enable: conf.enable,
         hashtagsLevelStart: conf.hashLevel.RITM.start,
         hashtagsLevelEnd: conf.hashLevel.RITM.end,
         hashtagCont: conf.hashCount.RITM,
@@ -62,6 +63,7 @@ class PageHandler {
         answer: conf.Answers.INC,
         sort: conf.sort.INC,
         clearButton: conf.clearButton.INC,
+        enable: conf.enable,
         hashtagsLevelStart: conf.hashLevel.INC.start,
         hashtagsLevelEnd: conf.hashLevel.INC.end,
         hashtagCont: conf.hashCount.INC,
@@ -154,7 +156,7 @@ class PageHandler {
                 this.setSizeTechInfo();
                 this.Page.TechInfo_find = true;
             }
-            if (TechInfoContainer.id == Task.TechInfoContainerNew)
+            if (TechInfoContainer.id == Task.TechInfoContainerNew && TechInfoContainer.childElementCount)
                 this.Page.TechInfo_find = true;
         }
         else {

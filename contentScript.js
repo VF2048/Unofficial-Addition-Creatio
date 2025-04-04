@@ -1,3 +1,17 @@
+const Hashtags = [
+    { name: "#УП", title: "Выполнено удалённо  или может быть выполнено удаленно." },
+    { name: "#локал", title: "Выполнено локально и не может быть выполнено по другому" },
+];
+
+const AnswersRitm = [
+    { name: "Доп РЗ", title: "Создано Доп РЗ" },
+    { name: "Ноте", title: "Установлена корпоративная операционная система на ноутбук " }
+];
+
+const AnswersINC = [
+    { name: "Маршрутизация", title: "Создано Доп РЗ" },
+];
+
 let Scripts = {
     version: 6,
     injected: {
@@ -78,7 +92,21 @@ function getLocalFile(url, regex) {
 //     }
 // }
 
+function checkstore(elem, data) {
+    chrome.storage.local.get(elem, (result) => {
+        if (!result[elem]) {
+            chrome.storage.local.set(data);
+            console.log(`Data ${elem} set`);
+        }else{
+            console.log(`Data ${elem} skipped`);
+        };
+    });
+}
+
 async function main() {
+    checkstore("Hashtags", { Hashtags });
+    checkstore("AnswersRitm", { AnswersRitm });
+    checkstore("AnswersINC", { AnswersINC });
     // await checkhashtagTreeVersion();
     let conf = await getConf();
     for (const [folderMain, folder] of Object.entries(conf)) {
@@ -86,6 +114,7 @@ async function main() {
             if (elem.files)
                 genInjectForFile(`${folderMain}/${folderName}`, elem, "/");
     }
+    chrome.runtime.sendMessage({ action: "injectScript" });
 }
 main();
 

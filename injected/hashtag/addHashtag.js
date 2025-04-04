@@ -1,6 +1,5 @@
 let Task;
 const regHash = /(#\S+)(\s+?|$)/gm;
-let TechInfoState = false;
 
 let conf = {};
 let pageHandler;
@@ -42,6 +41,7 @@ function setConfig() {
             INC: typeof clearButtonINC !== "undefined" ? clearButtonINC : false,
         },
         hashtags: Hashtags,
+        enable: true,
         disableComment: {
             RITM: disableCommentRitm,
             INC: disableCommentInc,
@@ -81,13 +81,9 @@ function getFilds() {
         try {
             fieldsState = pageHandler.getCommentField();
             closeText = pageHandler.getTechInfoFieldText();
-            TechInfoState = true;
         } catch {
-            TechInfoState = false;
-        }
-        if (!TechInfoState) {
             pageHandler.select_TechInfo();
-            return;
+            fieldsState = pageHandler.getCommentField();
         }
         if (fieldsState) {
             clearInterval(ifFieldsFound);
@@ -107,10 +103,11 @@ function getTaskType() {
 
 function checkContentInfo() {
     pageHandler.getCommentField();
-    if (!TechInfoState)
+    if (!pageHandler.Page.TechInfo_find)
         return;
     if (Task.service) {
         const redex = new RegExp(treeHandler.getRegex(), "gm");
+        closeText = pageHandler.getTechInfoFieldText();
         let hashtagTree = redex.exec(closeText)
         if (hashtagTree === null && Task.type === "Inc")
             pageHandler.addOverlay();
@@ -157,15 +154,14 @@ function findService() {
 
 function generateButtHash() {
     let buttons = ``;
-    if (TechInfoState)
-        if (Task.hashtagsLevelStart)
-            for (let i = Task.hashtagsLevelStart - 1; i < Task.hashtagsLevelEnd; i++) {
-                let batton = ``;
-                for (let el of conf.hashtags[i]) {
-                    batton += pageHandler.genButton("Hashtag", el);
-                }
-                buttons += pageHandler.genRow(batton);
+    if (pageHandler.Page.TechInfo_find)
+        if (Task.enable) {
+            let batton = ``;
+            for (let elem of conf.hashtags) {
+                batton += pageHandler.genButton("Hashtag", elem);
             }
+            buttons += pageHandler.genRow(batton);
+        }
     return `
         <div  id="el1">
             ${buttons}
@@ -182,7 +178,7 @@ function addButtons() {
         parent.insertAdjacentHTML("beforebegin", generateButtHash());
     let type = pageHandler.getButtType();
     if (!type) {
-        if (Task.type === "Inc" && Task.service && TechInfoState) {
+        if (Task.type === "Inc" && Task.service && pageHandler.Page.TechInfo_find) {
             parent.insertAdjacentHTML("afterend", pageHandler.generateButtType());
         }
     }
@@ -264,6 +260,7 @@ function checkMaxHashtags(max) {
 
 function hashSort(hashtag = ``) {
     if (pageHandler.Page.new_visualization) {
+        generateCloseCommentEvent();
         pageHandler.to_additional_info_page();
     }
     pageHandler.getCommentField();
@@ -286,7 +283,8 @@ function hashSort(hashtag = ``) {
     let hashArray = new Array(conf.hashtags.length + 1).fill(``);
     resetMaxHashtags();
     while (hashtagIt.length > 0) {
-        const lvElem = valideteHashtag(hashtagIt[0] + " ")
+        // const lvElem = valideteHashtag(hashtagIt[0] + " ")
+        const lvElem = 1
         if (lvElem >= 0 && Task.sort)
             hashArray[lvElem] += hashtagIt[0];
         else
@@ -348,11 +346,11 @@ function setText(text) {
     pageHandler.Page.TechInfo_el.click();
     pageHandler.Page.TechInfo_el.focus();
     pageHandler.setTechInfoText(text);
-    generateEvent();
+    generateTechInfoEvent();
     getTaskType();
 }
 
-function generateEvent() {
+function generateTechInfoEvent() {
     if (pageHandler.Page.TechInfo_el) {
         if (pageHandler.Page.new_visualization) {
             pageHandler.to_additional_info_page();
@@ -362,12 +360,16 @@ function generateEvent() {
 
     }
     setTimeout(() => {
-        if (pageHandler.Page.new_visualization) {
-            pageHandler.to_main_page();
-        }
-        if (pageHandler.Page.closeComment_el)
-            pageHandler.Page.closeComment_el.focus();
+        generateCloseCommentEvent();
     }, 10);
+}
+
+function generateCloseCommentEvent() {
+    if (pageHandler.Page.new_visualization) {
+        pageHandler.to_main_page();
+    }
+    if (pageHandler.Page.closeComment_el)
+        pageHandler.Page.closeComment_el.focus();
 }
 
 function generateButtAns() {

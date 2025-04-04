@@ -99,6 +99,15 @@ async function main() {
         cbk2.checked = data.Scripts.injected.hashtag.enable;
     })
 
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("button").addEventListener("click",async  () => {
+            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+            console.log(tab);
+            chrome.tabs.create({ url: chrome.runtime.getURL('settings/settings.html') });
+            // chrome.runtime.sendMessage({ action: "injectScript", tabId: tab.id });
+        })
+    })
+
     // keyConf = await getKeyConfig();
 
     // console.log(keyConf);

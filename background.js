@@ -13,7 +13,7 @@ function fetchDataFromRemoteServer(url, tableId, callback) {
     });
 }
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   switch (request.action) {
     case "fetchData":
       const remoteUrl = request.url;
@@ -27,6 +27,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         url: request.url
       }
       chrome.downloads.download(options)
+      return true;
+    case "injectScript":
+      const [tabs] = await chrome.tabs.query({ active: true, currentWindow: true });
+      const tabId = tabs.id
+      const result = await chrome.storage.local.get();
+      if (!result.Hashtags) return;
+
+      // 2. Вставляем скрипт в страницу
+      await chrome.scripting.executeScript({
+        target: { tabId },
+        world: "MAIN",
+        func: (data) => {
+          Hashtags = data.Hashtags;
+          AnswersRitm = data.AnswersRitm;
+          AnswersINC = data.AnswersINC;
+        },
+        args: [result]
+      });
       return true;
   }
 
