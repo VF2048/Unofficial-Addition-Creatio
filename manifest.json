@@ -28,7 +28,10 @@
         }
     ],
     "host_permissions": [
-        "<all_urls>"
+        "https://creatio.nornik.ru/0/Nui/ViewModule.aspx*",
+        "https://sirius.nornik.ru/0/Nui/ViewModule.aspx*",
+        "https://creatiotest2.nornik.ru/0/Nui/ViewModule.aspx*",
+        "https://vmshqcreapt01.npr.nornick.ru/0/Nui/ViewModule.aspx*"
     ],
     "web_accessible_resources": [
         {
@@ -45,8 +48,7 @@
     "permissions": [
         "storage",
         "activeTab",
-        "scripting",
-        "tabs"
+        "scripting"
     ],
     "background": {
         "service_worker": "background.js"

@@ -1,5 +1,5 @@
 html {
-    min-height: 5em;
+    /* min-height: 5em; */
     min-width: 10em;
 }
 
@@ -95,4 +95,16 @@ kbd {
     padding: 2px 4px;
     white-space: nowrap;
     cursor: pointer;
+}
+
+.settings {
+    background-color: #006CE0;
+    color: #fff;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding-left: 0.7em;
+    padding-bottom: 0.367em;
+    padding-top: 0.3em;
+    margin: auto;
 }

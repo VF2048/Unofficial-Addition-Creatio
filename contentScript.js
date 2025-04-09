@@ -79,7 +79,7 @@ function checkstore(elem, data) {
         if (!result[elem]) {
             chrome.storage.local.set(data);
             console.log(`Data ${elem} set`);
-        }else{
+        } else {
             console.log(`Data ${elem} skipped`);
         };
     });
@@ -98,6 +98,7 @@ async function main() {
     }
     chrome.runtime.sendMessage({ action: "injectScript" });
 }
+
 main();
 
 function genInjectForFile(path, files, separator) {

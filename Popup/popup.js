@@ -1,28 +1,28 @@
-let cbk1 = document.getElementById("cbk1");
-let cbk2 = document.getElementById("cbk2");
-let keySet = document.getElementById("keySet");
+// let cbk1 = document.getElementById("cbk1");
+// let cbk2 = document.getElementById("cbk2");
+// let keySet = document.getElementById("keySet");
 
-cbk1.addEventListener('change', async function () {
-    let data = await chrome.storage.local.get(["Scripts"]);
-    data = data.Scripts;
-    if (this.checked) {
-        data.injected.filter.enable = true;
-    } else {
-        data.injected.filter.enable = false;
-    }
-    chrome.storage.local.set({ "Scripts": data })
-});
+// cbk1.addEventListener('change', async function () {
+//     let data = await chrome.storage.local.get(["Scripts"]);
+//     data = data.Scripts;
+//     if (this.checked) {
+//         data.injected.filter.enable = true;
+//     } else {
+//         data.injected.filter.enable = false;
+//     }
+//     chrome.storage.local.set({ "Scripts": data })
+// });
 
-cbk2.addEventListener('change', async function () {
-    let data = await chrome.storage.local.get(["Scripts"]);
-    data = data.Scripts;
-    if (this.checked) {
-        data.injected.hashtag.enable = true;
-    } else {
-        data.injected.hashtag.enable = false;
-    }
-    chrome.storage.local.set({ "Scripts": data })
-});
+// cbk2.addEventListener('change', async function () {
+//     let data = await chrome.storage.local.get(["Scripts"]);
+//     data = data.Scripts;
+//     if (this.checked) {
+//         data.injected.hashtag.enable = true;
+//     } else {
+//         data.injected.hashtag.enable = false;
+//     }
+//     chrome.storage.local.set({ "Scripts": data })
+// });
 
 // let defKeyConf = {
 //     pressed: null,
