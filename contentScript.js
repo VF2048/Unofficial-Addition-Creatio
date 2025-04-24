@@ -104,6 +104,7 @@ function checkstore(elem, data) {
 function main() {
     const waitBody = setInterval(async () => {
         if (!document.getElementById("menu-button-imageEl")) return;
+        clearInterval(waitBody);
         checkstore("Hashtags", { Hashtags });
         checkstore("AnswersRitm", { AnswersRitm });
         checkstore("AnswersINC", { AnswersINC });
@@ -118,7 +119,6 @@ function main() {
         }
         console.log("Send injectScript");
         chrome.runtime.sendMessage({ action: "injectScript" });
-        clearInterval(waitBody);
     }, 100);
 
 }
