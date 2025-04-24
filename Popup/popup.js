@@ -94,10 +94,10 @@
 // }
 
 async function main() {
-    chrome.storage.local.get(["Scripts"]).then((data) => {
-        cbk1.checked = data.Scripts.injected.filter.enable;
-        cbk2.checked = data.Scripts.injected.hashtag.enable;
-    })
+    // chrome.storage.local.get(["Scripts"]).then((data) => {
+    //     cbk1.checked = data.Scripts.injected.filter.enable;
+    //     cbk2.checked = data.Scripts.injected.hashtag.enable;
+    // })
 
     document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("button").addEventListener("click",async  () => {

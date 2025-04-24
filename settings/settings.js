@@ -96,12 +96,47 @@ function load() {
     newTitleId: 'incNewTitle',
     addBtnId: 'incAddBtn'
   });
+  fillMail("mail");
+  checkboxHandler("treeEnable","cbk1");
+  checkboxHandler("serviceEnable","cbk2");
 }
 
 // Инициализация всех таблиц после загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
   load();
 });
+
+function fillMail(key) {
+  let obj = {};
+  obj[key] = [];
+  chrome.storage.local.get(obj, (result) => {
+    if (!result.mail.subject || !result.mail.body) return;
+    document.getElementById("subject").value = result.mail.subject;
+    document.getElementById("body").value = result.mail.body;
+  });
+  document.getElementById("mail_save").onclick = () => {
+    const data = {
+      subject: document.getElementById("subject").value,
+      body: document.getElementById("body").value
+    }
+    saveData(key, data);
+  }
+}
+
+function checkboxHandler(key,id) {
+  let obj = {};
+  obj[key] = [];
+  let elem = document.getElementById(id);
+  chrome.storage.local.get(obj, (result) => {
+    if (!result) return;
+    elem.checked = result[key];
+  });
+  elem.addEventListener('click', async () => {
+    const data =
+      document.getElementById(id).checked;
+    saveData(key, data);
+  })
+}
 
 // Обработчик для импорта данных
 document.getElementById('importBtn').addEventListener('click', () => {

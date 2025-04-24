@@ -1,4 +1,4 @@
-class ConfigurationItemObserver {
+class NumberObserver {
     constructor(configManager, pageHandler) {
         this.configManager = configManager;
         this.pageHandler = pageHandler;
@@ -26,7 +26,7 @@ class ConfigurationItemObserver {
     }
 
     handleMutations() {
-        const configurationItems = document.querySelectorAll('[id*="NNCaseTaskPageConfItemLookupEdit-el"]');
+        const configurationItems = document.querySelectorAll('[id*="NNCaseTaskPageCaseEndUserPhoneTextEdit-el"]');
 
         if (configurationItems.length > 0) {
             configurationItems.forEach(item => {
@@ -36,7 +36,7 @@ class ConfigurationItemObserver {
     }
 
     checkConfigurationItemValue(itemElement) {
-        const valueElements = document.querySelectorAll('[id*="NNCaseTaskPageConfItemLookupEdit-link-el"]');
+        const valueElements = document.querySelectorAll('[id*="NNCaseTaskPageCaseEndUserPhoneTextEdit-el"]');
 
         if (valueElements.length === 0 || Object.keys(this.configManager.task).length === 0) {
             return;
@@ -48,12 +48,10 @@ class ConfigurationItemObserver {
     }
 
     updateElementStyle(itemElement, valueElement) {
-        if (valueElement.innerText.trim() !== "") {
-            valueElement.style.backgroundColor = null;
-            this.pageHandler.removeNotationKE();
+        if (valueElement.value.trim() !== "") {
+            this.pageHandler.removeNumberRequestButton();
         } else {
-            itemElement.style.backgroundColor = "#ff262638";
-            this.pageHandler.addNotationKE();
+            this.pageHandler.addNumberRequestButton();
         }
     }
 

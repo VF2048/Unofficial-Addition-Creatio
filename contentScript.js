@@ -12,14 +12,30 @@ const AnswersINC = [
     { name: "Маршрутизация", title: "Создано Доп РЗ" },
 ];
 
+const mail = {
+    subject: "Необходима контактная информация по вашей заявке",
+    body: `Здравствуйте!
+
+Спасибо за обращение в службу технической поддержки.
+В вашей заявке отсутствуют контактные данные, и я не могу связаться с вами для уточнения деталей.
+Пожалуйста, отправьте удобный способ связи. 
+
+Буду ждать вашего ответа.
+`
+};
+
+const treeEnable = true;
+const serviceEnable = true;
+
 let Scripts = {
-    version: 6,
+    version: 4,
     injected: {
         checkFields: {
             type: "js",
             files: [
                 "service",
-                "ke"
+                "ke",
+                "number"
             ]
         },
         coloring: {
@@ -31,7 +47,6 @@ let Scripts = {
         configs: {
             type: "js",
             files: [
-                "configHashtag",
                 "configService",
                 "hashtagTree"
             ]
@@ -47,8 +62,9 @@ let Scripts = {
         hashtag: {
             type: "js",
             files: [
-                "addHashtag",
-                "TreeHandler",
+                "configManager",
+                "hashtagManager",
+                "treeHandler",
                 "pageHandler"
             ]
         },
@@ -76,7 +92,7 @@ function getLocalFile(url, regex) {
 
 function checkstore(elem, data) {
     chrome.storage.local.get(elem, (result) => {
-        if (!result[elem]) {
+        if (Object.keys(result).length < 1) {
             chrome.storage.local.set(data);
             console.log(`Data ${elem} set`);
         } else {
@@ -85,18 +101,26 @@ function checkstore(elem, data) {
     });
 }
 
-async function main() {
-    checkstore("Hashtags", { Hashtags });
-    checkstore("AnswersRitm", { AnswersRitm });
-    checkstore("AnswersINC", { AnswersINC });
-    // await checkhashtagTreeVersion();
-    let conf = await getConf();
-    for (const [folderMain, folder] of Object.entries(conf)) {
-        for (const [folderName, elem] of Object.entries(folder))
-            if (elem.files)
-                genInjectForFile(`${folderMain}/${folderName}`, elem, "/");
-    }
-    chrome.runtime.sendMessage({ action: "injectScript" });
+function main() {
+    const waitBody = setInterval(async () => {
+        if (!document.getElementById("menu-button-imageEl")) return;
+        checkstore("Hashtags", { Hashtags });
+        checkstore("AnswersRitm", { AnswersRitm });
+        checkstore("AnswersINC", { AnswersINC });
+        checkstore("mail", { mail });
+        checkstore("treeEnable", { treeEnable });
+        checkstore("serviceEnable", { serviceEnable });
+        let conf = await getConf();
+        for (const [folderMain, folder] of Object.entries(conf)) {
+            for (const [folderName, elem] of Object.entries(folder))
+                if (elem.files)
+                    genInjectForFile(`${folderMain}/${folderName}`, elem, "/");
+        }
+        console.log("Send injectScript");
+        chrome.runtime.sendMessage({ action: "injectScript" });
+        clearInterval(waitBody);
+    }, 100);
+
 }
 
 main();

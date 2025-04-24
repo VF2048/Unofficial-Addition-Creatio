@@ -37,9 +37,23 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         target: { tabId: sender.tab.id },
         world: "MAIN",
         func: (data) => {
-              Hashtags = data.Hashtags;
-              AnswersRitm = data.AnswersRitm;
-              AnswersINC = data.AnswersINC;
+
+          const checkExist = setInterval(() => {
+            if (typeof ConfigManager !== "undefined") {
+              // Инициализация приложения
+              let configManager = new ConfigManager();
+              configManager.init(data);
+              let pageHandler = new PageHandler(configManager);
+              new ConfigurationItemObserver(configManager, pageHandler);
+              new Service(configManager);
+              new HashtagManager(configManager, pageHandler);
+              new NumberObserver(configManager, pageHandler);
+              clearInterval(checkExist);
+            }
+          }, 100);
+          // Hashtags = data.Hashtags;
+          // AnswersRitm = data.AnswersRitm;
+          // AnswersINC = data.AnswersINC;
         },
         args: [result]
       });

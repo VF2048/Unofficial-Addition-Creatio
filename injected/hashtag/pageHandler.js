@@ -1,78 +1,9 @@
 class PageHandler {
 
-    Task;
-
-    #Ritm = {
-        type: "Ritm",
-        max: "maxElemRITM",
-        closeComment_el: "#NNCaseTaskPageDetailedResultContainer_Control",
-        closeComment_elNew: "#NNCaseTaskPageDetailedResultContainer_Control",
-        closeComment_virtual: "NNCaseTaskPageDetailedResultMemoEdit-virtual",
-        TechInfoContainer: "NNCaseTaskPageInformationClosedAndPausedGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsContainer",
-        TechInfoContainerNew: "NNCaseTaskPageNNAdditionalParametersGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsContainer",
-        TechInfoControl: "NNCaseTaskPageIteSecondHandMaterialsContainer_Control",
-        TechInfoControlNew: "NNCaseTaskPageIteSecondHandMaterialsContainer",
-        TechInfo_el: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-el",
-        TechInfo_elNew: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-el",
-        TechInfo_virtual: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-virtual",
-        TechInfo_virtualNew: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-virtual",
-        closeCode: "NNCaseTaskPageIteClosureCodeContainer",
-        closeCodeNew: "NNCaseTaskPageIteClosureCodeContainer",
-        closeCodeControl: "NNCaseTaskPageIteClosureCodeContainer_Control",
-        closeCodeControlNew: "NNCaseTaskPageIteClosureCodeContainer_Control",
-        buttonslayout: "NNCaseTaskPageInformationClosedAndPausedGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultContainer",
-        buttonslayoutNew: "NNCaseTaskPageNNClosureGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultContainer",
-        page_selector: "NNCaseTaskPageTabsTabPanel-tabpanel-items",
-        TechInfo_find: false,
-        answer: conf.Answers.RITM,
-        sort: conf.sort.RITM,
-        clearButton: conf.clearButton.RITM,
-        enable: conf.enable,
-        hashtagsLevelStart: conf.hashLevel.RITM.start,
-        hashtagsLevelEnd: conf.hashLevel.RITM.end,
-        hashtagCont: conf.hashCount.RITM,
-        defHashtagCont: conf.hashCount.RITM,
-        disableComment: conf.disableComment.RITM,
-        color: conf.color.RITM,
+    constructor(configManager) {
+        this.configManager = configManager;
+        this.conf = configManager.config;
     }
-
-    #Inc = {
-        type: "Inc",
-        max: "maxElemINC",
-        closeComment_el: "#NNCaseTaskPageDetailedResultIncidentContainer_Control",
-        closeComment_elNew: "#NNCaseTaskPageDetailedResultContainer_Control",
-        closeComment_virtual: "NNCaseTaskPageDetailedResultIncidentMemoEdit-virtual",
-        // closeComment_virtualNew: "NNCaseTaskPageDetailedResultMemoEdit-virtual",
-        TechInfoContainer: "NNCaseTaskPageInformationClosedAndPausedIncidentGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsIncidentContainer",
-        TechInfoContainerNew: "NNCaseTaskPageNNAdditionalParametersGridLayoutGridLayout-item-NNCaseTaskPageIteSecondHandMaterialsContainer",
-        TechInfoControl: "NNCaseTaskPageIteSecondHandMaterialsIncidentContainer",
-        TechInfoControlNew: "NNCaseTaskPageIteSecondHandMaterialsContainer",
-        TechInfo_el: "NNCaseTaskPageIteSecondHandMaterialsIncidentMemoEdit-el",
-        TechInfo_elNew: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-el",
-        TechInfo_virtual: "NNCaseTaskPageIteSecondHandMaterialsIncidentMemoEdit-virtual",
-        TechInfo_virtualNew: "NNCaseTaskPageIteSecondHandMaterialsMemoEdit-virtual",
-        closeCode: "NNCaseTaskPageIteClosureCodeIncidentContainer",
-        closeCodeNew: "NNCaseTaskPageIteClosureCodeContainer",
-        closeCodeControl: "NNCaseTaskPageIteClosureCodeIncidentContainer_Control",
-        closeCodeControlNew: "NNCaseTaskPageIteClosureCodeContainer_Control",
-        buttonslayout: "NNCaseTaskPageInformationClosedAndPausedIncidentGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultIncidentContainer",
-        buttonslayoutNew: "NNCaseTaskPageNNClosureGridLayoutGridLayout-item-NNCaseTaskPageDetailedResultContainer",
-        page_selector: "NNCaseTaskPageTabsTabPanel-tabpanel-items",
-        new_visualization: false,
-        TechInfo_find: false,
-        answer: conf.Answers.INC,
-        sort: conf.sort.INC,
-        clearButton: conf.clearButton.INC,
-        enable: conf.enable,
-        hashtagsLevelStart: conf.hashLevel.INC.start,
-        hashtagsLevelEnd: conf.hashLevel.INC.end,
-        hashtagCont: conf.hashCount.INC,
-        defHashtagCont: conf.hashCount.INC,
-        disableComment: conf.disableComment.INC,
-        color: conf.color.INC,
-    }
-
-    Page = {};
 
     ifTask() {
         const elem = this.getCreatioHeader();
@@ -82,7 +13,7 @@ class PageHandler {
                 return true;
             }
         }
-        this.Page.new_visualization = false;
+        this.configManager.page.new_visualization = false;
         return false;
     }
 
@@ -91,13 +22,9 @@ class PageHandler {
         const incReg = /(INC)\d*/gm;
         const ritReg = /(RITM)\d*/gm;
         if (taskText.match(incReg))
-            return this.setTask(this.#Inc);
+            return this.configManager.setTask("INC");
         if (taskText.match(ritReg))
-            return this.setTask(this.#Ritm);
-    }
-
-    setTask(type) {
-        return this.Task = type;
+            return this.configManager.setTask("RITM");
     }
 
     getCreatioHeader() {
@@ -127,63 +54,63 @@ class PageHandler {
     }
 
     setSizeTechInfo() {
-        this.Page.TechInfoContainer.style.width = "100%";
+        this.configManager.page.TechInfoContainer.style.width = "100%";
     }
 
     getCommentField() {
-        const TechInfoContainer = this.getElementById(Task.TechInfoContainer, Task.TechInfoContainerNew);
-        const TechInfoControl = this.getElementById(Task.TechInfoControl, Task.TechInfoControlNew);
-        const TechInfo_el = this.getElementById(Task.TechInfo_el, Task.TechInfo_elNew);
-        const TechInfo_virtual = this.getElementById(Task.TechInfo_virtual, Task.TechInfo_virtualNew);
-        const closeComment_el = this.getIframe(Task.closeComment_el, Task.closeComment_elNew);
-        // const closeComment_virtual = this.getElementById(Task.closeComment_virtual);
-        const closeCodeControl = this.getElementById(Task.closeCodeControl, Task.closeCodeControlNew);
-        const closeCode = this.getElementById(Task.closeCode, Task.closeCodeNew);
-        this.Page.TechInfoControl = TechInfoControl;
-        this.Page.TechInfoContainer = TechInfoContainer;
-        this.Page.TechInfo_el = TechInfo_el;
-        this.Page.TechInfo_virtual = TechInfo_virtual;
+        const TechInfoContainer = this.getElementById(this.configManager.task.TechInfoContainer, this.configManager.task.TechInfoContainerNew);
+        const TechInfoControl = this.getElementById(this.configManager.task.TechInfoControl, this.configManager.task.TechInfoControlNew);
+        const TechInfo_el = this.getElementById(this.configManager.task.TechInfo_el, this.configManager.task.TechInfo_elNew);
+        const TechInfo_virtual = this.getElementById(this.configManager.task.TechInfo_virtual, this.configManager.task.TechInfo_virtualNew);
+        const closeComment_el = this.getIframe(this.configManager.task.closeComment_el, this.configManager.task.closeComment_elNew);
+        // const closeComment_virtual = this.getElementById(this.configManager.task.closeComment_virtual);
+        const closeCodeControl = this.getElementById(this.configManager.task.closeCodeControl, this.configManager.task.closeCodeControlNew);
+        const closeCode = this.getElementById(this.configManager.task.closeCode, this.configManager.task.closeCodeNew);
+        this.configManager.page.TechInfoControl = TechInfoControl;
+        this.configManager.page.TechInfoContainer = TechInfoContainer;
+        this.configManager.page.TechInfo_el = TechInfo_el;
+        this.configManager.page.TechInfo_virtual = TechInfo_virtual;
         if (closeComment_el) {
             if (closeComment_el.clientHeight > 0) {
-                this.Page.closeComment_el = closeComment_el;
-                this.Page.closeComment_virtual = closeComment_el.children[0];
+                this.configManager.page.closeComment_el = closeComment_el;
+                this.configManager.page.closeComment_virtual = closeComment_el.children[0];
             }
         }
-        this.Page.closeCodeControl = closeCodeControl;
-        this.Page.closeCode = closeCode;
+        this.configManager.page.closeCodeControl = closeCodeControl;
+        this.configManager.page.closeCode = closeCode;
         if (TechInfoContainer) {
-            if (TechInfoContainer.id == Task.TechInfoContainer) {
+            if (TechInfoContainer.id == this.configManager.task.TechInfoContainer) {
                 this.setSizeTechInfo();
-                this.Page.TechInfo_find = true;
+                this.configManager.task.TechInfo_find = true;
             }
-            if (TechInfoContainer.id == Task.TechInfoContainerNew && TechInfoContainer.childElementCount)
-                this.Page.TechInfo_find = true;
+            if (TechInfoContainer.id == this.configManager.task.TechInfoContainerNew && TechInfoContainer.childElementCount)
+                this.configManager.task.TechInfo_find = true;
         }
         else {
-            this.Page.TechInfo_find = false;
+            this.configManager.task.TechInfo_find = false;
         }
-        if (this.Page.closeComment_el && closeCodeControl && closeCode !== "undefined")
+        if (this.configManager.page.closeComment_el && closeCodeControl && closeCode !== "undefined")
             return true;
         else
             return false;
     }
 
     select_TechInfo() {
-        if (!this.Page.new_visualization) {
-            this.Page.new_visualization = true
-            const selector = this.getElementById(this.Task.page_selector);
+        if (!this.configManager.page.new_visualization) {
+            this.configManager.page.new_visualization = true
+            const selector = this.getElementById(this.configManager.task.page_selector);
             selector.children[2].click();
             selector.children[0].click();
         }
     }
 
     to_additional_info_page() {
-        const selector = this.getElementById(this.Task.page_selector);
+        const selector = this.getElementById(this.configManager.task.page_selector);
         selector.children[2].click();
     }
 
     to_main_page() {
-        const selector = this.getElementById(this.Task.page_selector);
+        const selector = this.getElementById(this.configManager.task.page_selector);
         selector.children[0].click();
     }
 
@@ -211,12 +138,28 @@ class PageHandler {
         return `<div class="overlay-notation" id="tech-info-notation"><a class="text-notation">С чем проблема? Как проявлялась? Как решено?</a></div>`;
     }
 
+    generateNumberRequestButton() {
+        return `<button id="NumberRequestButton">Запросить</button>`
+    }
+
+    getNumberRequestButton() {
+        return this.getElementById("NumberRequestButton");
+    }
+
+    getNumbercontrol() {
+        return this.getElementById("NNCaseTaskPageCaseEndUserPhoneContainer_Control");
+    }
+
     getBody() {
         return document.getElementsByTagName("body");
     }
 
     getHashButtons() {
         return this.getElementById("hashButtons");
+    }
+
+    getContact() {
+        return this.getElementById("NNCaseTaskPageCaseContactLookupEdit-link-el");
     }
 
     createStyle(id) {
@@ -230,16 +173,33 @@ class PageHandler {
 
     addOverlay() {
         if (!this.getOverlay()) {
-            this.Page.closeCodeControl.insertAdjacentHTML("afterbegin", pageHandler.generateOverlay())
-            this.Page.closeCode.insertAdjacentHTML("beforeend", pageHandler.generateOverlayNotation())
+            this.configManager.page.closeCodeControl.insertAdjacentHTML("afterbegin", this.generateOverlay())
+            this.configManager.page.closeCode.insertAdjacentHTML("beforeend", this.generateOverlayNotation())
         }
     }
 
     addNotationKE() {
-        if (this.Page.closeCode)
+        if (this.configManager.page.closeCode)
             if (!this.getNotationKE()) {
-                this.Page.closeCode.insertAdjacentHTML("beforeend", pageHandler.generateNotationKE())
+                this.configManager.page.closeCode.insertAdjacentHTML("beforeend", this.generateNotationKE())
             }
+    }
+
+    addNumberRequestButton() {
+        if (this.getNumberRequestButton()) return;
+        this.getNumbercontrol().insertAdjacentHTML("afterbegin", this.generateNumberRequestButton())
+        this.getElementById("NumberRequestButton").onclick = () => {
+            const to = this.getContact().innerText;
+            const subject = encodeURIComponent(this.configManager.config.mail.subject);
+            const body = encodeURIComponent(this.configManager.config.mail.body);
+            const mailtoLink = `mailto:${to}?subject=${subject}&body=${body}`;
+            window.location.href = mailtoLink;
+        }
+    }
+
+    removeNumberRequestButton() {
+        if (!this.getNumberRequestButton()) return;
+        this.getNumberRequestButton().remove()
     }
 
     removeOverlay() {
@@ -263,20 +223,20 @@ class PageHandler {
     }
 
     getTechInfoFieldText() {
-        return this.Page.TechInfo_virtual.value;
+        return this.configManager.page.TechInfo_virtual.value;
     }
 
     getCloseFieldText() {
-        if (this.Page.closeComment_virtual)
-            return this.Page.closeComment_virtual.innerText;
+        if (this.configManager.page.closeComment_virtual)
+            return this.configManager.page.closeComment_virtual.innerText;
     }
 
     getCloseFieldTextEl() {
-        return this.Page.TechInfo_el.value;
+        return this.configManager.page.TechInfo_el.value;
     }
 
     getButtonslayout() {
-        return this.getElementById(this.Task.buttonslayout, this.Task.buttonslayoutNew);
+        return this.getElementById(this.configManager.task.buttonslayout, this.configManager.task.buttonslayoutNew);
     }
 
     getButtType() {
@@ -284,25 +244,25 @@ class PageHandler {
     }
 
     setCloseCommentStyle(color, disable) {
-        if (this.Page.closeComment_el) {
-            this.Page.closeComment_el.style.backgroundColor = color;
-            this.Page.closeComment_el.disabled = disable;
+        if (this.configManager.page.closeComment_el) {
+            this.configManager.page.closeComment_el.style.backgroundColor = color;
+            this.configManager.page.closeComment_el.disabled = disable;
         }
     }
 
     setCloseCommentText(text) {
-        if (this.Page.closeComment_virtual)
-            this.Page.closeComment_virtual.innerText = text;
+        if (this.configManager.page.closeComment_virtual)
+            this.configManager.page.closeComment_virtual.innerText = text;
     }
 
     setTechInfoStyle(color, disable) {
-        this.Page.TechInfo_el.style.backgroundColor = color;
-        this.Page.TechInfo_el.disabled = disable;
+        this.configManager.page.TechInfo_el.style.backgroundColor = color;
+        this.configManager.page.TechInfo_el.disabled = disable;
     }
 
     setTechInfoText(text) {
-        this.Page.TechInfo_virtual.value = text;
-        this.Page.TechInfo_el.value = text;
+        this.configManager.page.TechInfo_virtual.value = text;
+        this.configManager.page.TechInfo_el.value = text;
     }
 
     getTechInfoNotation() {
@@ -312,7 +272,7 @@ class PageHandler {
     setTechInfoNotation() {
         let TechInfoNotation = this.getTechInfoNotation();
         if (!TechInfoNotation)
-            this.Page.TechInfoControl.insertAdjacentHTML("beforeend", pageHandler.generateTechInfoNotation())
+            this.configManager.page.TechInfoControl.insertAdjacentHTML("beforeend", this.generateTechInfoNotation())
     }
 
     removeTechInfoNotation() {

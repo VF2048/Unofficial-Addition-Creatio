@@ -1,81 +1,75 @@
-<!-- popup.html -->
 <!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="utf-8">
-  <title>Пример расширения Chrome</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 20px;
-    }
-
-    th,
-    td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
-    input {
-      margin-right: 10px;
-    }
-
-    button {
-      margin-left: 10px;
-    }
-  </style>
+  <title>Настройки</title>
+  <link rel="stylesheet" href="settings.css">
 </head>
 
 <body>
-  <div>
-    <h1>Импорт/Экспорт данных</h1>
-
-    <div class="container">
-      <h2>Импорт данных</h2>
-      <!-- Файл должен иметь расширение .json или .js -->
-      <input type="file" id="importFile" accept=".json,.js">
-      <button id="importBtn">Импортировать</button>
+  <div class="checkbox-container">
+    <p>Дерево тегов</p>
+    <div class="checkbox-wrapper-65">
+      <label for="cbk1">
+        <input type="checkbox" id="cbk1" checked>
+        <span class="cbx">
+          <svg width="12px" height="11px" viewBox="0 0 12 11">
+            <polyline points="1 6.29411765 4.5 10 11 1"></polyline>
+          </svg>
+        </span>
+      </label>
     </div>
+  </div>
 
-    <div class="container">
-      <h2>Экспорт данных</h2>
-      <button id="exportBtn">Экспортировать</button>
+  <div class="checkbox-container">
+    <p>Провeрка услуги</p>
+    <div class="checkbox-wrapper-65">
+      <label for="cbk2">
+        <input type="checkbox" id="cbk2" checked>
+        <span class="cbx">
+          <svg width="12px" height="11px" viewBox="0 0 12 11">
+            <polyline points="1 6.29411765 4.5 10 11 1"></polyline>
+          </svg>
+        </span>
+      </label>
     </div>
-    
-    <h1>Список тегов</h1>
+  </div>
 
-    <!-- <h2>Добавить новый элемент</h2> -->
-    <input type="text" id="newName" placeholder="Name">
-    <input type="text" id="newTitle" placeholder="Title">
-    <button id="generalAddBtn">Добавить</button>
+  <h1>Импорт/Экспорт данных</h1>
 
-    <table id="dataTable">
-      <thead>
-        <tr>
-          <th>Тег</th>
-          <th>Описание</th>
-          <th>Действия</th>
-        </tr>
-      </thead>
-      <tbody id="generalTableBody"></tbody>
-    </table>
+  <div class="container">
+    <h2>Импорт данных</h2>
+    <input type="file" id="importFile" accept=".json,.js">
+    <button id="importBtn">Импортировать</button>
+  </div>
+
+  <div class="container">
+    <h2>Экспорт данных</h2>
+    <button id="exportBtn">Экспортировать</button>
+  </div>
+
+  <h1>Список тегов</h1>
+
+  <input type="text" id="generalNewName" placeholder="Name">
+  <input type="text" id="generalNewTitle" placeholder="Title">
+  <button id="generalAddBtn">Добавить</button>
+
+  <table id="dataTable">
+    <thead>
+      <tr>
+        <th>Тег</th>
+        <th>Описание</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody id="generalTableBody"></tbody>
+  </table>
   </div>
 
   <div>
     <h1>Шаблоны ответов для RITM</h1>
 
-    <!-- <h2>Добавить новый элемент</h2> -->
     <input type="text" id="ritmNewName" placeholder="Name">
     <input type="text" id="ritmNewTitle" placeholder="Title">
     <button id="ritmAddBtn">Добавить</button>
@@ -95,7 +89,6 @@
   <div>
     <h1>Шаблоны ответов для INC</h1>
 
-    <!-- <h2>Добавить новый элемент</h2> -->
     <input type="text" id="incNewName" placeholder="Name">
     <input type="text" id="incNewTitle" placeholder="Title">
     <button id="incAddBtn">Добавить</button>
@@ -113,5 +106,18 @@
   </div>
   <script src="settings.js"></script>
 </body>
+
+<h2>Создание письма</h2>
+<h5>(Есть ограничение по длине)</h5>
+<!-- <form id="emailForm"> -->
+<label for="subject" class="mail_subject_label">Тема письма:</label>
+<input class="mail_subject_input" type="text" id="subject" name="subject" required>
+
+<label for="body" class="mail_body_label">Содержание:</label>
+<textarea class="mail_body_input" id="body" name="body" rows="6" required></textarea>
+
+<button class="mail_save" id="mail_save">Сохранить форму письма</button>
+<!-- </form> -->
+
 
 </html>
