@@ -28,14 +28,15 @@ const treeEnable = true;
 const serviceEnable = true;
 
 let Scripts = {
-    version: 4,
+    version: 5,
     injected: {
         checkFields: {
             type: "js",
             files: [
                 "service",
                 "ke",
-                "number"
+                "number",
+                "overlay"
             ]
         },
         coloring: {

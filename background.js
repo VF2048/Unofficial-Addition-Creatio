@@ -48,12 +48,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
               new Service(configManager);
               new HashtagManager(configManager, pageHandler);
               new NumberObserver(configManager, pageHandler);
+              new OverlayObserver(configManager, pageHandler);
               clearInterval(checkExist);
             }
           }, 100);
-          // Hashtags = data.Hashtags;
-          // AnswersRitm = data.AnswersRitm;
-          // AnswersINC = data.AnswersINC;
         },
         args: [result]
       });

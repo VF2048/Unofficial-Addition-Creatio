@@ -66,6 +66,8 @@ class PageHandler {
         // const closeComment_virtual = this.getElementById(this.configManager.task.closeComment_virtual);
         const closeCodeControl = this.getElementById(this.configManager.task.closeCodeControl, this.configManager.task.closeCodeControlNew);
         const closeCode = this.getElementById(this.configManager.task.closeCode, this.configManager.task.closeCodeNew);
+        const complete = this.getElementById(this.configManager.task.complete);
+        this.configManager.page.complete = complete;
         this.configManager.page.TechInfoControl = TechInfoControl;
         this.configManager.page.TechInfoContainer = TechInfoContainer;
         this.configManager.page.TechInfo_el = TechInfo_el;
@@ -118,8 +120,16 @@ class PageHandler {
         return this.getElementById("overlay");
     }
 
+    getOverlayComplete() {
+        return this.getElementById("overlayComplete");
+    }
+
     generateOverlay() {
         return `<div class="overlay" id="overlay"></div>`;
+    }
+
+    generateOverlayComplete() {
+        return `<div class="overlay" id="overlayComplete"></div>`;
     }
 
     getNotationKE() {
@@ -173,6 +183,7 @@ class PageHandler {
 
     addOverlay() {
         if (!this.getOverlay()) {
+            this.configManager.task.overlay = true;
             this.configManager.page.closeCodeControl.insertAdjacentHTML("afterbegin", this.generateOverlay())
             this.configManager.page.closeCode.insertAdjacentHTML("beforeend", this.generateOverlayNotation())
         }
@@ -203,6 +214,7 @@ class PageHandler {
     }
 
     removeOverlay() {
+        this.configManager.task.overlay = false;
         let overlay = this.getOverlay();
         if (overlay)
             overlay.remove();
